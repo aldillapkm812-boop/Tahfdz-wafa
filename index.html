@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PUZZLE TAHFIZH CHALLENGE – PETUALANGAN HAFALAN JUZ 30</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Arabic (Amiri & Scheherazade New) & Kid-friendly Indonesian UI (Fredoka & Nunito) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --font-ui: 'Fredoka', 'Nunito', sans-serif;
+      --font-body: 'Nunito', sans-serif;
+      --font-arabic: 'Scheherazade New', 'Amiri', serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #172554 100%);
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-fredoka {
+      font-family: var(--font-ui);
+    }
+
+    .arabic-text {
+      font-family: var(--font-arabic);
+      direction: rtl;
+      unicode-bidi: isolate;
+      line-height: 1.85;
+      letter-spacing: 0;
+      word-spacing: 2px;
+    }
+
+    /* Animated Stars & Sky Background */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      70% { transform: scale(1.06); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shakeGentle {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    @keyframes pulseUrgent {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      50% { transform: scale(1.08); box-shadow: 0 0 22px 6px rgba(239, 68, 68, 0.65); }
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0.2; }
+    }
+
+    .star-twinkle {
+      animation: twinkle 3s infinite ease-in-out;
+    }
+    .float-slow {
+      animation: floatSlow 4.5s infinite ease-in-out;
+    }
+    .pop-in {
+      animation: popIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .shake-gentle {
+      animation: shakeGentle 0.45s ease-in-out;
+    }
+    .timer-urgent {
+      animation: pulseUrgent 0.8s infinite ease-in-out;
+    }
+
+    /* Custom Scrollbars for Group Workspaces */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.65);
+    }
+
+    /* Tactile 3D Kid-Friendly Buttons */
+    .btn-3d {
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+    }
+    .btn-3d:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+    .btn-3d:active:not(:disabled) {
+      transform: translateY(2px);
+    }
+
+    /* Drag & Drop Card Styling */
+    .ayah-card {
+      cursor: grab;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+      touch-action: manipulation;
+    }
+    .ayah-card:active {
+      cursor: grabbing;
+    }
+    .ayah-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.96);
+    }
+    .ayah-card.selected-for-tap {
+      ring: 4px;
+      transform: scale(1.02);
+      box-shadow: 0 0 0 4px #facc15, 0 10px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .drop-slot {
+      transition: all 0.16s ease;
+    }
+    .drop-slot.drag-over {
+      transform: scale(1.02);
+      border-style: solid !important;
+      background-color: rgba(250, 204, 21, 0.22) !important;
+    }
+
+    /* Star Burst Particle */
+    .star-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1.75rem;
+      animation: particleBurst 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes particleBurst {
+      0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.35) rotate(240deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-300 selection:text-slate-900">
+  <!-- Decorative Sky & Mosque Backdrop SVG -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <!-- Twinkling Stars -->
+    <svg class="w-full h-full opacity-60" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fde047" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="1440" cy="110" r="130" fill="url(#moonGlow)" />
+      <!-- Crescent Moon -->
+      <path d="M1455 55 A52 52 0 1 0 1495 142 A42 42 0 1 1 1455 55 Z" fill="#fef08a" class="float-slow" />
+      <!-- Stars -->
+      <g fill="#fef9c3">
+        <circle cx="140" cy="95" r="3" class="star-twinkle" />
+        <circle cx="320" cy="160" r="2.5" class="star-twinkle" style="animation-delay:0.7s" />
+        <circle cx="540" cy="75" r="3.5" class="star-twinkle" style="animation-delay:1.2s" />
+        <circle cx="790" cy="130" r="2.5" class="star-twinkle" style="animation-delay:0.4s" />
+        <circle cx="1050" cy="80" r="3" class="star-twinkle" style="animation-delay:1.8s" />
+        <circle cx="1260" cy="150" r="3.5" class="star-twinkle" style="animation-delay:0.9s" />
+        <circle cx="220" cy="270" r="2" class="star-twinkle" style="animation-delay:1.5s" />
+        <circle cx="1350" cy="260" r="2.5" class="star-twinkle" style="animation-delay:2.1s" />
+      </g>
+      <!-- Subtle Mosque Silhouette at Bottom -->
+      <g fill="#0b1120" opacity="0.55" transform="translate(0, 740)">
+        <rect x="0" y="110" width="1600" height="70" />
+        <!-- Left Minaret -->
+        <rect x="110" y="20" width="22" height="95" />
+        <path d="M106 20 L121 -12 L136 20 Z" />
+        <!-- Central Dome -->
+        <path d="M710 110 C710 35, 890 35, 890 110 Z" />
+        <rect x="797" y="18" width="6" height="22" />
+        <circle cx="800" cy="14" r="6" />
+        <!-- Side Domes -->
+        <path d="M610 110 C610 65, 700 65, 700 110 Z" />
+        <path d="M900 110 C900 65, 990 65, 990 110 Z" />
+        <!-- Right Minaret -->
+        <rect x="1468" y="20" width="22" height="95" />
+        <path d="M1464 20 L1479 -12 L1494 20 Z" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- Confetti Layer for Winner Podium -->
+  <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden"></div>
+
+  <!-- Main App Shell -->
+  <div id="app" class="relative z-10 min-h-screen flex flex-col">
+    <!-- Top Header Bar -->
+    <header class="bg-slate-900/85 backdrop-blur-md border-b border-indigo-400/25 px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+      <div class="flex items-center gap-3">
+        <!-- Cute Muslim Kid / Star Emblem SVG -->
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 p-1.5 shadow-md flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 64 64" class="w-full h-full">
+            <circle cx="32" cy="34" r="18" fill="#fde68a" />
+            <!-- Peci / Kufi Cap -->
+            <path d="M15 26 C15 14, 49 14, 49 26 Z" fill="#10b981" />
+            <rect x="15" y="23" width="34" height="4" rx="2" fill="#047857" />
+            <!-- Happy Eyes & Smile -->
+            <circle cx="26" cy="34" r="2.3" fill="#1e293b" />
+            <circle cx="38" cy="34" r="2.3" fill="#1e293b" />
+            <path d="M27 41 Q32 46 37 41" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <!-- Sparkling Star -->
+            <polygon points="52,6 54,12 60,12 55,16 57,22 52,18 47,22 49,16 44,12 50,12" fill="#fef08a" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40">
+              Petualangan Bintang Hafalan Juz 30
+            </span>
+          </div>
+          <h1 class="text-base sm:text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
+            PUZZLE TAHFIZH CHALLENGE
+          </h1>
+        </div>
+      </div>
+
+      <!-- Center Live Round & Timer HUD (Visible during active game) -->
+      <div id="hud-center" class="hidden flex items-center gap-3 sm:gap-5 bg-slate-800/90 border border-indigo-400/30 px-4 py-1.5 rounded-2xl shadow-inner">
+        <div class="text-center">
+          <div class="text-[10px] uppercase tracking-wider text-indigo-300 font-bold">Babak</div>
+          <div id="hud-round" class="text-lg sm:text-xl font-fredoka font-bold text-white">1 / 3</div>
+        </div>
+        <div class="h-8 w-px bg-slate-600"></div>
+        <div id="timer-box" class="flex items-center gap-2 px-3 py-1 rounded-xl bg-indigo-950 border border-indigo-500/40">
+          <span class="text-xl">⏱️</span>
+          <span id="hud-timer" class="text-2xl sm:text-3xl font-fredoka font-extrabold text-amber-300 tabular-nums">60</span>
+          <span class="text-xs font-bold text-indigo-200">dtk</span>
+        </div>
+        <div class="h-8 w-px bg-slate-600 hidden md:block"></div>
+        <div class="hidden md:block text-left">
+          <div id="hud-level-badge" class="text-xs font-extrabold text-emerald-300">Level 1 • Dasar</div>
+          <div id="hud-mode-badge" class="text-xs font-bold text-sky-300">Puzzle Susun Ayat</div>
+        </div>
+      </div>
+
+      <!-- Right Controls: Sound Toggle, Teacher Panel Button, Home/Setup -->
+      <div class="flex items-center gap-2">
+        <button id="btn-sound-toggle" onclick="toggleSound()" title="Suara Efek" class="btn-3d px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm flex items-center gap-1.5 shadow">
+          <span id="sound-icon">🔊</span>
+          <span class="hidden sm:inline" id="sound-label">Suara Aktif</span>
+        </button>
+
+        <button id="btn-teacher-drawer" onclick="toggleTeacherModal(true)" class="btn-3d px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-sm flex items-center gap-1.5 shadow-md">
+          <span>👩‍🏫</span>
+          <span>Panel Guru</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Non-intrusive Toast Notification Banner -->
+    <div id="toast-banner" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4">
+      <div id="toast-content" class="px-5 py-2.5 rounded-2xl font-bold text-sm sm:text-base shadow-2xl border-2 flex items-center gap-2 bg-slate-900 text-white border-amber-400">
+        <span id="toast-icon">✨</span>
+        <span id="toast-text">Pesan</span>
+      </div>
+    </div>
+
+    <!-- SCREEN 1: SETUP & TEACHER CONFIGURATION LOBBY -->
+    <main id="screen-setup" class="flex-1 flex items-center justify-center p-3 sm:p-6">
+      <div class="w-full max-w-6xl bg-slate-900/85 backdrop-blur-xl border-2 border-indigo-400/30 rounded-3xl shadow-2xl overflow-hidden">
+        <!-- Hero Banner inside Setup -->
+        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/15">
+          <div class="flex items-center gap-4 text-center md:text-left">
+            <!-- Illustrated Characters -->
+            <div class="hidden sm:flex items-center -space-x-2">
+              <div class="w-14 h-14 rounded-full bg-sky-300 border-4 border-white flex items-center justify-center text-3xl shadow-lg">👦🏻</div>
+              <div class="w-14 h-14 rounded-full bg-pink-300 border-4 border-white flex items-center justify-center text-3xl shadow-lg">👧🏻</div>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white drop-shadow">
+                Selamat Datang di Petualangan Hafalan Juz 30! 🌟
+              </h2>
+              <p class="text-indigo-100 text-xs sm:text-sm font-semibold mt-0.5">
+                Atur level surat, mode tantangan, dan kelompok bermain untuk memulai kompetisi murojaah kelas 1 SD.
+              </p>
+            </div>
+          </div>
+          <button onclick="startNewSession()" class="btn-3d shrink-0 px-7 py-3.5 rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 text-slate-950 font-fredoka font-extrabold text-lg sm:text-xl shadow-xl border-b-4 border-emerald-800 flex items-center gap-2.5">
+            <span>🚀</span>
+            <span>MULAI PERMAINAN</span>
+          </button>
+        </div>
+
+        <!-- Configuration Grid -->
+        <div class="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Level, Surah & Game Mode (7 cols) -->
+          <div class="lg:col-span-7 space-y-5">
+            <!-- 1. Pilih Level Hafalan -->
+            <div class="bg-slate-800/75 border border-slate-700 rounded-2xl p-4">
+              <label class="block text-sm font-extrabold text-amber-300 uppercase tracking-wider mb-3">
+                1. Pilih Tingkatan Level Hafalan Juz 30
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="level-selector-cards">
+                <button type="button" onclick="selectLevel(1)" data-level="1" class="level-card text-left p-3.5 rounded-2xl border-2 transition-all bg-emerald-500/20 border-emerald-400 shadow-md">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-extrabold text-xs">LEVEL 1</span>
+                    <span class="text-lg">🌱</span>
+                  </div>
+                  <div class="font-fredoka font-bold text-white text-base mt-1.5">Tingkat Dasar</div>
+                  <div class="text-xs text-emerald-200 font-semibold mt-0.5">QS. An-Naas – Ad-Dhuha</div>
+                </button>
+
+                <button type="button" onclick="selectLevel(2)" data-level="2" class="level-card text-left p-3.5 rounded-2xl border-2 transition-all bg-slate-800/90 border-slate-600 hover:border-sky-400">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-sky-400 text-slate-950 font-extrabold text-xs">LEVEL 2</span>
+                    <span class="text-lg">🌿</span>
+                  </div>
+                  <div class="font-fredoka font-bold text-white text-base mt-1.5">Tingkat Menengah</div>
+                  <div class="text-xs text-slate-300 font-semibold mt-0.5">QS. Al-Lail – Al-Insyiqaq</div>
+                </button>
+
+                <button type="button" onclick="selectLevel(3)" data-level="3" class="level-card text-left p-3.5 rounded-2xl border-2 transition-all bg-slate-800/90 border-slate-600 hover:border-purple-400">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-full bg-purple-400 text-slate-950 font-extrabold text-xs">LEVEL 3</span>
+                    <span class="text-lg">🌳</span>
+                  </div>
+                  <div class="font-fredoka font-bold text-white text-base mt-1.5">Tingkat Lanjutan</div>
+                  <div class="text-xs text-slate-300 font-semibold mt-0.5">QS. Al-Muthaffifin – An-Naba'</div>
+                </button>
+              </div>
+
+              <!-- Specific Surah Filter -->
+              <div class="mt-3.5 pt-3 border-t border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <label for="setup-surah-select" class="text-xs font-bold text-slate-300">
+                  📖 Pilih Surat Fokus Murojaah:
+                </label>
+                <select id="setup-surah-select" onchange="config.selectedSurah = this.value" class="bg-slate-900 border border-slate-600 text-white text-sm font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400 sm:w-72">
+                  <option value="ALL">🎲 Acak Seluruh Surat di Level Ini</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 2. Pilih Jenis Permainan -->
+            <div class="bg-slate-800/75 border border-slate-700 rounded-2xl p-4">
+              <label class="block text-sm font-extrabold text-amber-300 uppercase tracking-wider mb-3">
+                2. Pilih Mode Permainan
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="mode-selector-cards">
+                <button type="button" onclick="selectGameMode('PUZZLE')" data-mode="PUZZLE" class="mode-card p-3 rounded-2xl border-2 text-center transition-all bg-amber-400/20 border-amber-400">
+                  <div class="text-2xl mb-1">🧩</div>
+                  <div class="font-fredoka font-bold text-sm text-white">Susun Ayat</div>
+                  <div class="text-[11px] text-amber-200">Mode A</div>
+                </button>
+
+                <button type="button" onclick="selectGameMode('SAMBUNG')" data-mode="SAMBUNG" class="mode-card p-3 rounded-2xl border-2 text-center transition-all bg-slate-800 border-slate-600 hover:border-amber-300">
+                  <div class="text-2xl mb-1">🔗</div>
+                  <div class="font-fredoka font-bold text-sm text-white">Sambung Ayat</div>
+                  <div class="text-[11px] text-slate-300">Mode B</div>
+                </button>
+
+                <button type="button" onclick="selectGameMode('TEBAK')" data-mode="TEBAK" class="mode-card p-3 rounded-2xl border-2 text-center transition-all bg-slate-800 border-slate-600 hover:border-amber-300">
+                  <div class="text-2xl mb-1">🕌</div>
+                  <div class="font-fredoka font-bold text-sm text-white">Tebak Surat</div>
+                  <div class="text-[11px] text-slate-300">Mode C</div>
+                </button>
+
+                <button type="button" onclick="selectGameMode('CAMPURAN')" data-mode="CAMPURAN" class="mode-card p-3 rounded-2xl border-2 text-center transition-all bg-slate-800 border-slate-600 hover:border-amber-300">
+                  <div class="text-2xl mb-1">🎡</div>
+                  <div class="font-fredoka font-bold text-sm text-white">Gabungan</div>
+                  <div class="text-[11px] text-slate-300">Semua Mode</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. Pengaturan Teknis Tantangan -->
+            <div class="bg-slate-800/75 border border-slate-700 rounded-2xl p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[11px] font-extrabold text-slate-300 uppercase mb-1">Mode Kompetisi</label>
+                <select id="setup-comp-mode" onchange="config.competitionMode = this.value" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2.5 py-2 text-xs sm:text-sm font-bold text-white">
+                  <option value="DIFFERENT">Puzzle Berbeda (Setara)</option>
+                  <option value="SAME">Puzzle Sama (Adu Cepat)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-extrabold text-slate-300 uppercase mb-1">Potongan Ayat</label>
+                <select id="setup-piece-count" onchange="config.pieceCount = parseInt(this.value)" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2.5 py-2 text-xs sm:text-sm font-bold text-white">
+                  <option value="5" selected>5 Potongan Ayat</option>
+                  <option value="6">6 Potongan Ayat</option>
+                  <option value="7">7 Potongan Ayat</option>
+                  <option value="8">8 Potongan Ayat</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-extrabold text-slate-300 uppercase mb-1">Waktu / Babak</label>
+                <select id="setup-duration" onchange="config.duration = parseInt(this.value)" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2.5 py-2 text-xs sm:text-sm font-bold text-white">
+                  <option value="30">30 Detik</option>
+                  <option value="45">45 Detik</option>
+                  <option value="60" selected>60 Detik</option>
+                  <option value="90">90 Detik</option>
+                  <option value="120">120 Detik</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-extrabold text-slate-300 uppercase mb-1">Jumlah Babak</label>
+                <select id="setup-rounds" onchange="config.totalRounds = parseInt(this.value)" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-2.5 py-2 text-xs sm:text-sm font-bold text-white">
+                  <option value="1">1 Babak</option>
+                  <option value="2">2 Babak</option>
+                  <option value="3" selected>3 Babak</option>
+                  <option value="4">4 Babak</option>
+                  <option value="5">5 Babak</option>
+                  <option value="6">6 Babak</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Multi-Group Setup (5 cols) -->
+          <div class="lg:col-span-5 bg-slate-800/75 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <label class="text-sm font-extrabold text-amber-300 uppercase tracking-wider">
+                  4. Kelompok Bermain (2–5 Kelompok)
+                </label>
+                <div class="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-700">
+                  <button type="button" onclick="setGroupCount(2)" class="grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold" data-count="2">2</button>
+                  <button type="button" onclick="setGroupCount(3)" class="grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold" data-count="3">3</button>
+                  <button type="button" onclick="setGroupCount(4)" class="grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold" data-count="4">4</button>
+                  <button type="button" onclick="setGroupCount(5)" class="grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold" data-count="5">5</button>
+                </div>
+              </div>
+
+              <div id="setup-groups-list" class="space-y-2.5">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-700 text-xs text-slate-300 flex items-center justify-between">
+              <span>💡 Klik nama kelompok untuk mengubahnya.</span>
+              <button type="button" onclick="toggleTeacherModal(true)" class="text-amber-300 hover:underline font-bold">
+                Atur Poin & Bonus →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SCREEN 2: ACTIVE MULTI-GROUP GAME ARENA -->
+    <main id="screen-game" class="hidden flex-1 flex flex-col p-2 sm:p-3 gap-2.5 overflow-hidden">
+      <!-- Teacher Quick Control Ribbon -->
+      <div class="bg-slate-900/80 backdrop-blur border border-slate-700/80 rounded-2xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 shadow">
+        <div class="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200">
+          <span class="px-2.5 py-1 rounded-lg bg-indigo-500/20 border border-indigo-400/30 text-indigo-200" id="arena-instruction-banner">
+            🧩 Susun potongan ayat sesuai urutan mushaf, lalu tekan KUNCI JAWABAN!
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <button id="btn-pause-resume" onclick="togglePauseTimer()" class="btn-3d px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-extrabold flex items-center gap-1">
+            <span>⏸️</span>
+            <span id="pause-label">Jeda</span>
+          </button>
+
+          <button onclick="addExtraTime(15)" class="btn-3d px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold flex items-center gap-1">
+            <span>⏱️</span>
+            <span>+15 Detik</span>
+          </button>
+
+          <button onclick="openAnswerKeyModal()" class="btn-3d px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-extrabold flex items-center gap-1">
+            <span>🔑</span>
+            <span>Kunci Jawaban</span>
+          </button>
+
+          <button id="btn-next-round" onclick="advanceRoundOrFinish()" class="btn-3d px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 text-xs font-extrabold flex items-center gap-1 shadow">
+            <span id="next-round-label">Babak Berikutnya ➡️</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Multi-Group Split Arena Grid (2 to 5 Columns) -->
+      <div id="groups-arena-grid" class="flex-1 grid gap-2.5 sm:gap-3 min-h-0">
+        <!-- Group Boards rendered dynamically here -->
+      </div>
+    </main>
+
+    <!-- SCREEN 3: WINNER PODIUM & FINAL RESULTS -->
+    <main id="screen-results" class="hidden flex-1 flex items-center justify-center p-3 sm:p-6">
+      <div class="w-full max-w-6xl bg-slate-900/90 backdrop-blur-xl border-2 border-amber-400/40 rounded-3xl shadow-2xl p-5 sm:p-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/20 border border-amber-400/50 text-amber-300 font-extrabold text-xs sm:text-sm mb-2">
+          <span>🏆</span>
+          <span>PENGUMUMAN PEMENANG PETUALANGAN HAFALAN JUZ 30</span>
+          <span>🏆</span>
+        </div>
+        <h2 class="text-2xl sm:text-4xl font-fredoka font-extrabold text-white mb-6">
+          MasyaAllah! Hebat Sekali Semua Kelompok! 🌟
+        </h2>
+
+        <!-- Top 3 Podium Cards -->
+        <div id="podium-top-three" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-6">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Complete Leaderboard Table -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden mb-6">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-950/70 text-xs uppercase tracking-wider text-slate-300 border-b border-slate-700">
+                  <th class="py-3 px-4">Peringkat</th>
+                  <th class="py-3 px-4">Kelompok</th>
+                  <th class="py-3 px-4 text-center">Penghargaan</th>
+                  <th class="py-3 px-4 text-center">Puzzle Selesai</th>
+                  <th class="py-3 px-4 text-center">Benar / Salah</th>
+                  <th class="py-3 px-4 text-center">Waktu Total</th>
+                  <th class="py-3 px-4 text-right">Total Poin</th>
+                </tr>
+              </thead>
+              <tbody id="results-table-body" class="divide-y divide-slate-700/70 text-sm font-bold">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Replay & Setup Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <button onclick="startNewSession()" class="btn-3d px-7 py-3.5 rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 text-slate-950 font-fredoka font-extrabold text-lg shadow-xl border-b-4 border-emerald-800 flex items-center gap-2">
+            <span>🔄</span>
+            <span>Main Lagi (Pengaturan Sama)</span>
+          </button>
+          <button onclick="returnToSetup()" class="btn-3d px-6 py-3.5 rounded-2xl bg-slate-700 hover:bg-slate-600 text-white font-fredoka font-bold text-lg shadow-lg flex items-center gap-2">
+            <span>⚙️</span>
+            <span>Kembali ke Pengaturan Guru</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: COMPREHENSIVE TEACHER CONTROL PANEL -->
+  <div id="modal-teacher" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border-2 border-amber-400/40 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden pop-in">
+      <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3.5 flex items-center justify-between text-slate-950">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👩‍🏫</span>
+          <h3 class="font-fredoka font-extrabold text-lg sm:text-xl">Panel Kontrol & Penilaian Guru</h3>
+        </div>
+        <button onclick="toggleTeacherModal(false)" class="w-9 h-9 rounded-xl bg-slate-950/20 hover:bg-slate-950/30 font-extrabold text-lg flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="p-5 overflow-y-auto custom-scroll space-y-5 text-sm">
+        <!-- Section A: Scoring & Speed Bonus Configuration -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4">
+          <h4 class="font-fredoka font-bold text-amber-300 text-base mb-3">1. Pengaturan Poin & Bonus Kecepatan</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">Puzzle Susun Ayat</label>
+              <input type="number" min="1" max="100" id="cfg-pts-puzzle" value="15" onchange="config.points.PUZZLE = parseInt(this.value)||15" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-2 font-extrabold text-white" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">Sambung Ayat</label>
+              <input type="number" min="1" max="100" id="cfg-pts-sambung" value="15" onchange="config.points.SAMBUNG = parseInt(this.value)||15" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-2 font-extrabold text-white" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">Tebak Nama Surat</label>
+              <input type="number" min="1" max="100" id="cfg-pts-tebak" value="15" onchange="config.points.TEBAK = parseInt(this.value)||15" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-2 font-extrabold text-white" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-bold mb-1">Bonus Kecepatan</label>
+              <input type="number" min="0" max="50" id="cfg-pts-speed" value="5" onchange="config.points.SPEED = parseInt(this.value)||0" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-2 font-extrabold text-white" />
+            </div>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-700">
+            <label class="flex items-center gap-2.5 cursor-pointer font-bold text-slate-200">
+              <input type="checkbox" id="cfg-enable-speed" checked onchange="config.enableSpeedBonus = this.checked" class="w-5 h-5 accent-amber-400 rounded" />
+              <span>Aktifkan Bonus Kecepatan (hanya untuk jawaban benar)</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-300">Poin Hafalan Lisan:</span>
+              <input type="number" min="1" max="50" id="cfg-pts-oral" value="10" onchange="config.points.ORAL = parseInt(this.value)||10" class="w-20 bg-slate-900 border border-slate-600 rounded-xl px-2.5 py-1.5 font-extrabold text-white text-center" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Section B: Manual Oral Recitation Grading (Penilaian Hafalan Lisan) -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="font-fredoka font-bold text-emerald-300 text-base">2. Penilaian Hafalan Lisan & Koreksi Skor Kelompok</h4>
+            <span class="text-xs text-slate-400 font-semibold">Klik +Lisan saat siswa lancar membacakan ayat</span>
+          </div>
+          <div id="teacher-oral-grading-list" class="space-y-2">
+            <!-- Dynamically populated with active groups -->
+          </div>
+        </div>
+
+        <!-- Section C: Session Actions -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h4 class="font-fredoka font-bold text-sky-300 text-base">3. Kontrol Sesi Permainan</h4>
+            <p class="text-xs text-slate-400">Ulangi babak, reset skor, atau kembali ke layar pengaturan utama.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="toggleTeacherModal(false); openAnswerKeyModal();" class="btn-3d px-3.5 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs">
+              🔑 Lihat Kunci Jawaban
+            </button>
+            <button onclick="toggleTeacherModal(false); startNewSession();" class="btn-3d px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-xs">
+              🔄 Ulangi Permainan
+            </button>
+            <button onclick="toggleTeacherModal(false); returnToSetup();" class="btn-3d px-3.5 py-2 rounded-xl bg-rose-600 text-white font-bold text-xs">
+              🏠 Menu Utama
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/70 px-5 py-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleTeacherModal(false)" class="btn-3d px-6 py-2 rounded-xl bg-emerald-500 text-slate-950 font-extrabold text-sm">
+          Simpan & Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TEACHER ANSWER KEY (KUNCI JAWABAN GURU) -->
+  <div id="modal-answer-key" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border-2 border-purple-400/50 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden pop-in">
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-5 py-3.5 flex items-center justify-between text-white">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🔑</span>
+          <h3 class="font-fredoka font-extrabold text-lg sm:text-xl">Kunci Jawaban & Referensi Mushaf (Khusus Guru)</h3>
+        </div>
+        <button onclick="closeAnswerKeyModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 font-extrabold text-lg flex items-center justify-center">✕</button>
+      </div>
+      <div id="answer-key-content" class="p-5 overflow-y-auto custom-scroll space-y-4">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="bg-slate-950/70 px-5 py-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeAnswerKeyModal()" class="btn-3d px-6 py-2 rounded-xl bg-purple-500 text-white font-extrabold text-sm">
+          Tutup Kunci Jawaban
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * ============================================================================
+     * 1. VERIFIED & ACCURATE JUZ 30 QURANIC TEXT BANK (LEVEL 1, 2, AND 3)
+     * ============================================================================
+     * Every Surah contains verified Uthmani/Mushaf Arabic text with complete harakat,
+     * exact Surah number, Indonesian name, and inclusive Level categorization:
+     * - Level 1: QS. An-Naas (114) to QS. Ad-Dhuha (93)
+     * - Level 2: QS. Al-Lail (92) to QS. Al-Insyiqaq (84)
+     * - Level 3: QS. Al-Muthaffifin (83) to QS. An-Naba' (78)
+     */
+    const QURAN_BANK = [
+      // ===================== LEVEL 1: QS. AN-NAAS (114) - QS. AD-DHUHA (93) =====================
+      {
+        level: 1, number: 114, name: "An-Naas",
+        verses: [
+          { num: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ" },
+          { num: 2, text: "مَلِكِ ٱلنَّاسِ" },
+          { num: 3, text: "إِلَـٰهِ ٱلنَّاسِ" },
+          { num: 4, text: "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ" },
+          { num: 5, text: "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ" },
+          { num: 6, text: "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ" }
+        ]
+      },
+      {
+        level: 1, number: 113, name: "Al-Falaq",
+        verses: [
+          { num: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ" },
+          { num: 2, text: "مِن شَرِّ مَا خَلَقَ" },
+          { num: 3, text: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ" },
+          { num: 4, text: "وَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ" },
+          { num: 5, text: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ" }
+        ]
+      },
+      {
+        level: 1, number: 112, name: "Al-Ikhlas",
+        verses: [
+          { num: 1, text: "قُلْ هُوَ ٱللَّهُ أَحَدٌ" },
+          { num: 2, text: "ٱللَّهُ ٱلصَّمَدُ" },
+          { num: 3, text: "لَمْ يَلِدْ وَلَمْ يُولَدْ" },
+          { num: 4, text: "وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ" }
+        ]
+      },
+      {
+        level: 1, number: 111, name: "Al-Masad",
+        verses: [
+          { num: 1, text: "تَبَّتْ يَدَآ أَبِى لَهَبٍ وَتَبَّ" },
+          { num: 2, text: "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا كَسَبَ" },
+          { num: 3, text: "سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ" },
+          { num: 4, text: "وَٱمْرَأَتُهُۥ حَمَّالَةَ ٱلْحَطَبِ" },
+          { num: 5, text: "فِى جِيدِهَا حَبْلٌ مِّن مَّسَدٍۭ" }
+        ]
+      },
+      {
+        level: 1, number: 110, name: "An-Nasr",
+        verses: [
+          { num: 1, text: "إِذَا جَآءَ نَصْرُ ٱللَّهِ وَٱلْفَتْحُ" },
+          { num: 2, text: "وَرَأَيْتَ ٱلنَّاسَ يَدْخُلُونَ فِى دِينِ ٱللَّهِ أَفْوَاجًا" },
+          { num: 3, text: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَٱسْتَغْفِرْهُ ۚ إِنَّهُۥ كَانَ تَوَّابًۢا" }
+        ]
+      },
+      {
+        level: 1, number: 109, name: "Al-Kafirun",
+        verses: [
+          { num: 1, text: "قُلْ يَـٰٓأَيُّهَا ٱلْكَـٰفِرُونَ" },
+          { num: 2, text: "لَآ أَعْبُدُ مَا تَعْبُدُونَ" },
+          { num: 3, text: "وَلَآ أَنتُمْ عَـٰبِدُونَ مَآ أَعْبُدُ" },
+          { num: 4, text: "وَلَآ أَنَا۠ عَابِدٌ مَّا عَبَدتُّمْ" },
+          { num: 5, text: "وَلَآ أَنتُمْ عَـٰبِدُونَ مَآ أَعْبُدُ" },
+          { num: 6, text: "لَكُمْ دِينُكُمْ وَلِىَ دِينِ" }
+        ]
+      },
+      {
+        level: 1, number: 108, name: "Al-Kautsar",
+        verses: [
+          { num: 1, text: "إِنَّآ أَعْطَيْنَـٰكَ ٱلْكَوْثَرَ" },
+          { num: 2, text: "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ" },
+          { num: 3, text: "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ" }
+        ]
+      },
+      {
+        level: 1, number: 107, name: "Al-Ma'un",
+        verses: [
+          { num: 1, text: "أَرَءَيْتَ ٱلَّذِى يُكَذِّبُ بِٱلدِّينِ" },
+          { num: 2, text: "فَذَٰلِكَ ٱلَّذِى يَدُعُّ ٱلْيَتِيمَ" },
+          { num: 3, text: "وَلَا يَحُضُّ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ" },
+          { num: 4, text: "فَوَيْلٌ لِّلْمُصَلِّينَ" },
+          { num: 5, text: "ٱلَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ" },
+          { num: 6, text: "ٱلَّذِينَ هُمْ يُرَآءُونَ" },
+          { num: 7, text: "وَيَمْنَعُونَ ٱلْمَاعُونَ" }
+        ]
+      },
+      {
+        level: 1, number: 106, name: "Quraisy",
+        verses: [
+          { num: 1, text: "لِإِيلَـٰفِ قُرَيْشٍ" },
+          { num: 2, text: "إِۦلَـٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ" },
+          { num: 3, text: "فَلْيَعْبُدُوا۟ رَبَّ هَـٰذَا ٱلْبَيْتِ" },
+          { num: 4, text: "ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍ وَءَامَنَهُم مِّنْ خَوْفٍۭ" }
+        ]
+      },
+      {
+        level: 1, number: 105, name: "Al-Fil",
+        verses: [
+          { num: 1, text: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَـٰبِ ٱلْفِيلِ" },
+          { num: 2, text: "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِى تَضْلِيلٍ" },
+          { num: 3, text: "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ" },
+          { num: 4, text: "تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ" },
+          { num: 5, text: "فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍۭ" }
+        ]
+      },
+      {
+        level: 1, number: 104, name: "Al-Humazah",
+        verses: [
+          { num: 1, text: "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ" },
+          { num: 2, text: "ٱلَّذِى جَمَعَ مَالًا وَعَدَّدَهُۥ" },
+          { num: 3, text: "يَحْسَبُ أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ" },
+          { num: 4, text: "كَلَّا ۖ لَيُنۢبَذَنَّ فِى ٱلْحُطَمَةِ" },
+          { num: 5, text: "وَمَآ أَدْرَىٰكَ مَا ٱلْحُطَمَةُ" },
+          { num: 6, text: "نَارُ ٱللَّهِ ٱلْمُوقَدَةُ" },
+          { num: 7, text: "ٱلَّتِى تَطَّلِعُ عَلَى ٱلْأَفْـِٔدَةِ" },
+          { num: 8, text: "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ" },
+          { num: 9, text: "فِى عَمَدٍ مُّمَدَّدَةٍۭ" }
+        ]
+      },
+      {
+        level: 1, number: 103, name: "Al-'Asr",
+        verses: [
+          { num: 1, text: "وَٱلْعَصْرِ" },
+          { num: 2, text: "إِنَّ ٱلْإِنسَـٰنَ لَفِى خُسْرٍ" },
+          { num: 3, text: "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ" }
+        ]
+      },
+      {
+        level: 1, number: 102, name: "At-Takatsur",
+        verses: [
+          { num: 1, text: "أَلْهَىٰكُمُ ٱلتَّكَاثُرُ" },
+          { num: 2, text: "حَتَّىٰ زُرْتُمُ ٱلْمَقَابِرَ" },
+          { num: 3, text: "كَلَّا سَوْفَ تَعْلَمُونَ" },
+          { num: 4, text: "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ" },
+          { num: 5, text: "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ" },
+          { num: 6, text: "لَتَرَوُنَّ ٱلْجَحِيمَ" },
+          { num: 7, text: "ثُمَّ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ" },
+          { num: 8, text: "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ" }
+        ]
+      },
+      {
+        level: 1, number: 101, name: "Al-Qari'ah",
+        verses: [
+          { num: 1, text: "ٱلْقَارِعَةُ" },
+          { num: 2, text: "مَا ٱلْقَارِعَةُ" },
+          { num: 3, text: "وَمَآ أَدْرَىٰكَ مَا ٱلْقَارِعَةُ" },
+          { num: 4, text: "يَوْمَ يَكُونُ ٱلنَّاسُ كَٱلْفَرَاشِ ٱلْمَبْثُوثِ" },
+          { num: 5, text: "وَتَكُونُ ٱلْجِبَالُ كَٱلْعِهْنِ ٱلْمَنفُوشِ" },
+          { num: 6, text: "فَأَمَّا مَن ثَقُلَتْ مَوَٰزِينُهُۥ" },
+          { num: 7, text: "فَهُوَ فِى عِيشَةٍ رَّاضِيَةٍ" },
+          { num: 8, text: "وَأَمَّا مَنْ خَفَّتْ مَوَٰزِينُهُۥ" },
+          { num: 9, text: "فَأُمُّهُۥ هَاوِيَةٌ" },
+          { num: 10, text: "وَمَآ أَدْرَىٰكَ مَا هِيَهْ" },
+          { num: 11, text: "نَارٌ حَامِيَةٌۢ" }
+        ]
+      },
+      {
+        level: 1, number: 100, name: "Al-'Adiyat",
+        verses: [
+          { num: 1, text: "وَٱلْعَـٰدِيَـٰتِ ضَبْحًا" },
+          { num: 2, text: "فَٱلْمُورِيَـٰتِ قَدْحًا" },
+          { num: 3, text: "فَٱلْمُغِيرَٰتِ صُبْحًا" },
+          { num: 4, text: "فَأَثَرْنَ بِهِۦ نَقْعًا" },
+          { num: 5, text: "فَوَسَطْنَ بِهِۦ جَمْعًا" },
+          { num: 6, text: "إِنَّ ٱلْإِنسَـٰنَ لِرَبِّهِۦ لَكَنُودٌ" },
+          { num: 7, text: "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ" },
+          { num: 8, text: "وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ" }
+        ]
+      },
+      {
+        level: 1, number: 99, name: "Az-Zalzalah",
+        verses: [
+          { num: 1, text: "إِذَا زُلْزِلَتِ ٱلْأَرْضُ زِلْزَالَهَا" },
+          { num: 2, text: "وَأَخْرَجَتِ ٱلْأَرْضُ أَثْقَالَهَا" },
+          { num: 3, text: "وَقَالَ ٱلْإِنسَـٰنُ مَا لَهَا" },
+          { num: 4, text: "يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا" },
+          { num: 5, text: "بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا" },
+          { num: 6, text: "يَوْمَئِذٍ يَصْدُرُ ٱلنَّاسُ أَشْتَاتًا لِّيُرَوْا۟ أَعْمَـٰلَهُمْ" },
+          { num: 7, text: "فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُۥ" },
+          { num: 8, text: "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُۥ" }
+        ]
+      },
+      {
+        level: 1, number: 98, name: "Al-Bayyinah",
+        verses: [
+          { num: 1, text: "لَمْ يَكُنِ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَـٰبِ وَٱلْمُشْرِكِينَ مُنفَكِّينَ حَتَّىٰ تَأْتِيَهُمُ ٱلْبَيِّنَةُ" },
+          { num: 2, text: "رَسُولٌ مِّنَ ٱللَّهِ يَتْلُوا۟ صُحُفًا مُّطَهَّرَةً" },
+          { num: 3, text: "فِيهَا كُتُبٌ قَيِّمَةٌ" },
+          { num: 4, text: "وَمَا تَفَرَّقَ ٱلَّذِينَ أُوتُوا۟ ٱلْكِتَـٰبَ إِلَّا مِنۢ بَعْدِ مَا جَآءَتْهُمُ ٱلْبَيِّنَةُ" },
+          { num: 5, text: "وَمَآ أُمِرُوٓا۟ إِلَّا لِيَعْبُدُوا۟ ٱللَّهَ مُخْلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُوا۟ ٱلصَّلَوٰةَ وَيُؤْتُوا۟ ٱلزَّكَوٰةَ ۚ وَذَٰلِكَ دِينُ ٱلْقَيِّمَةِ" },
+          { num: 6, text: "إِنَّ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَـٰبِ وَٱلْمُشْرِكِينَ فِى نَارِ جَهَنَّمَ خَـٰلِدِينَ فِيهَآ ۚ أُو۟لَـٰٓئِكَ هُمْ شَرُّ ٱلْبَرِيَّةِ" },
+          { num: 7, text: "إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ أُو۟لَـٰٓئِكَ هُمْ خَيْرُ ٱلْبَرِيَّةِ" },
+          { num: 8, text: "جَزَآؤُهُمْ عِندَ رَبِّهِمْ جَنَّـٰتُ عَدْنٍ تَجْرِى مِن تَحْتِهَا ٱلْأَنْهَـٰرُ خَـٰلِدِينَ فِيهَآ أَبَدًا ۖ رَّضِىَ ٱللَّهُ عَنْهُمْ وَرَضُوا۟ عَنْهُ ۚ ذَٰلِكَ لِمَنْ خَشِىَ رَبَّهُۥ" }
+        ]
+      },
+      {
+        level: 1, number: 97, name: "Al-Qadr",
+        verses: [
+          { num: 1, text: "إِنَّآ أَنزَلْنَـٰهُ فِى لَيْلَةِ ٱلْقَدْرِ" },
+          { num: 2, text: "وَمَآ أَدْرَىٰكَ مَا لَيْلَةُ ٱلْقَدْرِ" },
+          { num: 3, text: "لَيْلَةُ ٱلْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ" },
+          { num: 4, text: "تَنَزَّلُ ٱلْمَلَـٰٓئِكَةُ وَٱلرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍ" },
+          { num: 5, text: "سَلَـٰمٌ هِىَ حَتَّىٰ مَطْلَعِ ٱلْفَجْرِ" }
+        ]
+      },
+      {
+        level: 1, number: 96, name: "Al-'Alaq",
+        verses: [
+          { num: 1, text: "ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِى خَلَقَ" },
+          { num: 2, text: "خَلَقَ ٱلْإِنسَـٰنَ مِنْ عَلَقٍ" },
+          { num: 3, text: "ٱقْرَأْ وَرَبُّكَ ٱلْأَكْرَمُ" },
+          { num: 4, text: "ٱلَّذِى عَلَّمَ بِٱلْقَلَمِ" },
+          { num: 5, text: "عَلَّمَ ٱلْإِنسَـٰنَ مَا لَمْ يَعْلَمْ" },
+          { num: 6, text: "كَلَّآ إِنَّ ٱلْإِنسَـٰنَ لَيَطْغَىٰٓ" },
+          { num: 7, text: "أَن رَّءَاهُ ٱسْتَغْنَىٰٓ" },
+          { num: 8, text: "إِنَّ إِلَىٰ رَبِّكَ ٱلرُّجْعَىٰٓ" }
+        ]
+      },
+      {
+        level: 1, number: 95, name: "At-Tin",
+        verses: [
+          { num: 1, text: "وَٱلتِّينِ وَٱلزَّيْتُونِ" },
+          { num: 2, text: "وَطُورِ سِينِينَ" },
+          { num: 3, text: "وَهَـٰذَا ٱلْبَلَدِ ٱلْأَمِينِ" },
+          { num: 4, text: "لَقَدْ خَلَقْنَا ٱلْإِنسَـٰنَ فِىٓ أَحْسَنِ تَقْوِيمٍ" },
+          { num: 5, text: "ثُمَّ رَدَدْنَـٰهُ أَسْفَلَ سَـٰفِلِينَ" },
+          { num: 6, text: "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ فَلَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍ" },
+          { num: 7, text: "فَمَا يُكَذِّبُكَ بَعْدُ بِٱلدِّينِ" },
+          { num: 8, text: "أَلَيْسَ ٱللَّهُ بِأَحْكَمِ ٱلْحَـٰكِمِينَ" }
+        ]
+      },
+      {
+        level: 1, number: 94, name: "Al-Insyirah",
+        verses: [
+          { num: 1, text: "أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ" },
+          { num: 2, text: "وَوَضَعْنَا عَنكَ وِزْرَكَ" },
+          { num: 3, text: "ٱلَّذِىٓ أَنقَضَ ظَهْرَكَ" },
+          { num: 4, text: "وَرَفَعْنَا لَكَ ذِكْرَكَ" },
+          { num: 5, text: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا" },
+          { num: 6, text: "إِنَّ مَعَ ٱلْعُسْرِ يُسْرًا" },
+          { num: 7, text: "فَإِذَا فَرَغْتَ فَٱنصَبْ" },
+          { num: 8, text: "وَإِلَىٰ رَبِّكَ فَٱرْغَب" }
+        ]
+      },
+      {
+        level: 1, number: 93, name: "Ad-Dhuha",
+        verses: [
+          { num: 1, text: "وَٱلضُّحَىٰ" },
+          { num: 2, text: "وَٱلَّيْلِ إِذَا سَجَىٰ" },
+          { num: 3, text: "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ" },
+          { num: 4, text: "وَلَلْـَٔاخِرَةُ خَيْرٌ لَّكَ مِنَ ٱلْأُولَىٰ" },
+          { num: 5, text: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰٓ" },
+          { num: 6, text: "أَلَمْ يَجِدْكَ يَتِيمًا فَـَٔاوَىٰ" },
+          { num: 7, text: "وَوَجَدَكَ ضَآلًّا فَهَدَىٰ" },
+          { num: 8, text: "وَوَجَدَكَ عَآئِلًا فَأَغْنَىٰ" },
+          { num: 9, text: "فَأَمَّا ٱلْيَتِيمَ فَلَا تَقْهَرْ" },
+          { num: 10, text: "وَأَمَّا ٱلسَّآئِلَ فَلَا تَنْهَرْ" },
+          { num: 11, text: "وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ" }
+        ]
+      },
+
+      // ===================== LEVEL 2: QS. AL-LAIL (92) - QS. AL-INSYIQAQ (84) =====================
+      {
+        level: 2, number: 92, name: "Al-Lail",
+        verses: [
+          { num: 1, text: "وَٱلَّيْلِ إِذَا يَغْشَىٰ" },
+          { num: 2, text: "وَٱلنَّهَارِ إِذَا تَجَلَّىٰ" },
+          { num: 3, text: "وَمَا خَلَقَ ٱلذَّكَرَ وَٱلْأُنثَىٰٓ" },
+          { num: 4, text: "إِنَّ سَعْيَكُمْ لَشَتَّىٰ" },
+          { num: 5, text: "فَأَمَّا مَنْ أَعْطَىٰ وَٱتَّقَىٰ" },
+          { num: 6, text: "وَصَدَّقَ بِٱلْحُسْنَىٰ" },
+          { num: 7, text: "فَسَنُيَسِّرُهُۥ لِلْيُسْرَىٰ" },
+          { num: 8, text: "وَأَمَّا مَنۢ بَخِلَ وَٱسْتَغْنَىٰ" },
+          { num: 9, text: "وَكَذَّبَ بِٱلْحُسْنَىٰ" },
+          { num: 10, text: "فَسَنُيَسِّرُهُۥ لِلْعُسْرَىٰ" }
+        ]
+      },
+      {
+        level: 2, number: 91, name: "Asy-Syams",
+        verses: [
+          { num: 1, text: "وَٱلشَّمْسِ وَضُحَىٰهَا" },
+          { num: 2, text: "وَٱلْقَمَرِ إِذَا تَلَىٰهَا" },
+          { num: 3, text: "وَٱلنَّهَارِ إِذَا جَلَّىٰهَا" },
+          { num: 4, text: "وَٱلَّيْلِ إِذَا يَغْشَىٰهَا" },
+          { num: 5, text: "وَٱلسَّمَآءِ وَمَا بَنَىٰهَا" },
+          { num: 6, text: "وَٱلْأَرْضِ وَمَا طَحَىٰهَا" },
+          { num: 7, text: "وَنَفْسٍ وَمَا سَوَّىٰهَا" },
+          { num: 8, text: "فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَىٰهَا" },
+          { num: 9, text: "قَدْ أَفْلَحَ مَن زَكَّىٰهَا" },
+          { num: 10, text: "وَقَدْ خَابَ مَن دَسَّىٰهَا" }
+        ]
+      },
+      {
+        level: 2, number: 90, name: "Al-Balad",
+        verses: [
+          { num: 1, text: "لَآ أُقْسِمُ بِهَـٰذَا ٱلْبَلَدِ" },
+          { num: 2, text: "وَأَنتَ حِلٌّۢ بِهَـٰذَا ٱلْبَلَدِ" },
+          { num: 3, text: "وَوَالِدٍ وَمَا وَلَدَ" },
+          { num: 4, text: "لَقَدْ خَلَقْنَا ٱلْإِنسَـٰنَ فِى كَبَدٍ" },
+          { num: 5, text: "أَيَحْسَبُ أَن لَّن يَقْدِرَ عَلَيْهِ أَحَدٌ" },
+          { num: 6, text: "يَقُولُ أَهْلَكْتُ مَالًا لُّبَدًا" },
+          { num: 7, text: "أَيَحْسَبُ أَن لَّمْ يَرَهُۥٓ أَحَدٌ" },
+          { num: 8, text: "أَلَمْ نَجْعَل لَّهُۥ عَيْنَيْنِ" },
+          { num: 9, text: "وَلِسَانًا وَشَفَتَيْنِ" },
+          { num: 10, text: "وَهَدَيْنَـٰهُ ٱلنَّجْدَيْنِ" }
+        ]
+      },
+      {
+        level: 2, number: 89, name: "Al-Fajr",
+        verses: [
+          { num: 1, text: "وَٱلْفَجْرِ" },
+          { num: 2, text: "وَلَيَالٍ عَشْرٍ" },
+          { num: 3, text: "وَٱلشَّفْعِ وَٱلْوَتْرِ" },
+          { num: 4, text: "وَٱلَّيْلِ إِذَا يَسْرِ" },
+          { num: 5, text: "هَلْ فِى ذَٰلِكَ قَسَمٌ لِّذِى حِجْرٍ" },
+          { num: 6, text: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ" },
+          { num: 7, text: "إِرَمَ ذَاتِ ٱلْعِمَادِ" },
+          { num: 8, text: "ٱلَّتِى لَمْ يُخْلَقْ مِثْلُهَا فِى ٱلْبِلَـٰدِ" }
+        ]
+      },
+      {
+        level: 2, number: 88, name: "Al-Ghasyiyah",
+        verses: [
+          { num: 1, text: "هَلْ أَتَىٰكَ حَدِيثُ ٱلْغَـٰشِيَةِ" },
+          { num: 2, text: "وُجُوهٌ يَوْمَئِذٍ خَـٰشِعَةٌ" },
+          { num: 3, text: "عَامِلَةٌ نَّاصِبَةٌ" },
+          { num: 4, text: "تَصْلَىٰ نَارًا حَامِيَةً" },
+          { num: 5, text: "تُسْقَىٰ مِنْ عَيْنٍ ءَانِيَةٍ" },
+          { num: 6, text: "لَّيْسَ لَهُمْ طَعَامٌ إِلَّا مِن ضَرِيعٍ" },
+          { num: 7, text: "لَّا يُسْمِنُ وَلَا يُغْنِى مِن جُوعٍ" },
+          { num: 8, text: "وُجُوهٌ يَوْمَئِذٍ نَّاعِمَةٌ" }
+        ]
+      },
+      {
+        level: 2, number: 87, name: "Al-A'la",
+        verses: [
+          { num: 1, text: "سَبِّحِ ٱسْمَ رَبِّكَ ٱلْأَعْلَى" },
+          { num: 2, text: "ٱلَّذِى خَلَقَ فَسَوَّىٰ" },
+          { num: 3, text: "وَٱلَّذِى قَدَّرَ فَهَدَىٰ" },
+          { num: 4, text: "وَٱلَّذِىٓ أَخْرَجَ ٱلْمَرْعَىٰ" },
+          { num: 5, text: "فَجَعَلَهُۥ غُثَآءً أَحْوَىٰ" },
+          { num: 6, text: "سَنُقْرِئُكَ فَلَا تَنسَىٰٓ" },
+          { num: 7, text: "إِلَّا مَا شَآءَ ٱللَّهُ ۚ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ" },
+          { num: 8, text: "وَنُيَسِّرُكَ لِلْيُسْرَىٰ" }
+        ]
+      },
+      {
+        level: 2, number: 86, name: "Ath-Thariq",
+        verses: [
+          { num: 1, text: "وَٱلسَّمَآءِ وَٱلطَّارِقِ" },
+          { num: 2, text: "وَمَآ أَدْرَىٰكَ مَا ٱلطَّارِقُ" },
+          { num: 3, text: "ٱلنَّجْمُ ٱلثَّاقِبُ" },
+          { num: 4, text: "إِن كُلُّ نَفْسٍ لَّمَّا عَلَيْهَا حَافِظٌ" },
+          { num: 5, text: "فَلْيَنظُرِ ٱلْإِنسَـٰنُ مِمَّ خُلِقَ" },
+          { num: 6, text: "خُلِقَ مِن مَّآءٍ دَافِقٍ" },
+          { num: 7, text: "يَخْرُجُ مِنۢ بَيْنِ ٱلصُّلْبِ وَٱلتَّرَآئِبِ" },
+          { num: 8, text: "إِنَّهُۥ عَلَىٰ رَجْعِهِۦ لَقَادِرٌ" }
+        ]
+      },
+      {
+        level: 2, number: 85, name: "Al-Buruj",
+        verses: [
+          { num: 1, text: "وَٱلسَّمَآءِ ذَاتِ ٱلْبُرُوجِ" },
+          { num: 2, text: "وَٱلْيَوْمِ ٱلْمَوْعُودِ" },
+          { num: 3, text: "وَشَاهِدٍ وَمَشْهُودٍ" },
+          { num: 4, text: "قُتِلَ أَصْحَـٰبُ ٱلْأُخْدُودِ" },
+          { num: 5, text: "ٱلنَّارِ ذَاتِ ٱلْوَقُودِ" },
+          { num: 6, text: "إِذْ هُمْ عَلَيْهَا قُعُودٌ" },
+          { num: 7, text: "وَهُمْ عَلَىٰ مَا يَفْعَلُونَ بِٱلْمُؤْمِنِينَ شُهُودٌ" },
+          { num: 8, text: "وَمَا نَقَمُوا۟ مِنْهُمْ إِلَّآ أَن يُؤْمِنُوا۟ بِٱللَّهِ ٱلْعَزِيزِ ٱلْحَمِيدِ" }
+        ]
+      },
+      {
+        level: 2, number: 84, name: "Al-Insyiqaq",
+        verses: [
+          { num: 1, text: "إِذَا ٱلسَّمَآءُ ٱنشَقَّتْ" },
+          { num: 2, text: "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ" },
+          { num: 3, text: "وَإِذَا ٱلْأَرْضُ مُدَّتْ" },
+          { num: 4, text: "وَأَلْقَتْ مَا فِيهَا وَتَخَلَّتْ" },
+          { num: 5, text: "وَأَذِنَتْ لِرَبِّهَا وَحُقَّتْ" },
+          { num: 6, text: "يَـٰٓأَيُّهَا ٱلْإِنسَـٰنُ إِنَّكَ كَادِحٌ إِلَىٰ رَبِّكَ كَدْحًا فَمُلَـٰقِيهِ" },
+          { num: 7, text: "فَأَمَّا مَنْ أُوتِىَ كِتَـٰبَهُۥ بِيَمِينِهِۦ" },
+          { num: 8, text: "فَسَوْفَ يُحَاسَبُ حِسَابًا يَسِيرًا" }
+        ]
+      },
+
+      // ===================== LEVEL 3: QS. AL-MUTHAFFIFIN (83) - QS. AN-NABA' (78) =====================
+      {
+        level: 3, number: 83, name: "Al-Muthaffifin",
+        verses: [
+          { num: 1, text: "وَيْلٌ لِّلْمُطَفِّفِينَ" },
+          { num: 2, text: "ٱلَّذِينَ إِذَا ٱكْتَالُوا۟ عَلَى ٱلنَّاسِ يَسْتَوْفُونَ" },
+          { num: 3, text: "وَإِذَا كَالُوهُمْ أَو وَّزَنُوهُمْ يُخْسِرُونَ" },
+          { num: 4, text: "أَلَا يَظُنُّ أُو۟لَـٰٓئِكَ أَنَّهُم مَّبْعُوثُونَ" },
+          { num: 5, text: "لِيَوْمٍ عَظِيمٍ" },
+          { num: 6, text: "يَوْمَ يَقُومُ ٱلنَّاسُ لِرَبِّ ٱلْعَـٰلَمِينَ" },
+          { num: 7, text: "كَلَّآ إِنَّ كِتَـٰبَ ٱلْفُجَّارِ لَفِى سِجِّينٍ" },
+          { num: 8, text: "وَمَآ أَدْرَىٰكَ مَا سِجِّينٌ" }
+        ]
+      },
+      {
+        level: 3, number: 82, name: "Al-Infithar",
+        verses: [
+          { num: 1, text: "إِذَا ٱلسَّمَآءُ ٱنفَطَرَتْ" },
+          { num: 2, text: "وَإِذَا ٱلْكَوَاكِبُ ٱنتَثَرَتْ" },
+          { num: 3, text: "وَإِذَا ٱلْبِحَارُ فُجِّرَتْ" },
+          { num: 4, text: "وَإِذَا ٱلْقُبُورُ بُعْثِرَتْ" },
+          { num: 5, text: "عَلِمَتْ نَفْسٌ مَّا قَدَّمَتْ وَأَخَّرَتْ" },
+          { num: 6, text: "يَـٰٓأَيُّهَا ٱلْإِنسَـٰنُ مَا غَرَّكَ بِرَبِّكَ ٱلْكَرِيمِ" },
+          { num: 7, text: "ٱلَّذِى خَلَقَكَ فَسَوَّىٰكَ فَعَدَلَكَ" },
+          { num: 8, text: "فِىٓ أَىِّ صُورَةٍ مَّا شَآءَ رَكَّبَكَ" }
+        ]
+      },
+      {
+        level: 3, number: 81, name: "At-Takwir",
+        verses: [
+          { num: 1, text: "إِذَا ٱلشَّمْسُ كُوِّرَتْ" },
+          { num: 2, text: "وَإِذَا ٱلنُّجُومُ ٱنكَدَرَتْ" },
+          { num: 3, text: "وَإِذَا ٱلْجِبَالُ سُيِّرَتْ" },
+          { num: 4, text: "وَإِذَا ٱلْعِشَارُ عُطِّلَتْ" },
+          { num: 5, text: "وَإِذَا ٱلْوُحُوشُ حُشِرَتْ" },
+          { num: 6, text: "وَإِذَا ٱلْبِحَارُ سُجِّرَتْ" },
+          { num: 7, text: "وَإِذَا ٱلنُّفُوسُ زُوِّجَتْ" },
+          { num: 8, text: "وَإِذَا ٱلْمَوْءُۥدَةُ سُئِلَتْ" }
+        ]
+      },
+      {
+        level: 3, number: 80, name: "'Abasa",
+        verses: [
+          { num: 1, text: "عَبَسَ وَتَوَلَّىٰٓ" },
+          { num: 2, text: "أَن جَآءَهُ ٱلْأَعْمَىٰ" },
+          { num: 3, text: "وَمَا يُدْرِيكَ لَعَلَّهُۥ يَزَّكَّىٰٓ" },
+          { num: 4, text: "أَوْ يَذَّكَّرُ فَتَنفَعَهُ ٱلذِّكْرَىٰٓ" },
+          { num: 5, text: "أَمَّا مَنِ ٱسْتَغْنَىٰ" },
+          { num: 6, text: "فَأَنتَ لَهُۥ تَصَدَّىٰ" },
+          { num: 7, text: "وَمَا عَلَيْكَ أَلَّا يَزَّكَّىٰ" },
+          { num: 8, text: "وَأَمَّا مَن جَآءَكَ يَسْعَىٰ" }
+        ]
+      },
+      {
+        level: 3, number: 79, name: "An-Nazi'at",
+        verses: [
+          { num: 1, text: "وَٱلنَّـٰزِعَـٰتِ غَرْقًا" },
+          { num: 2, text: "وَٱلنَّـٰشِطَـٰتِ نَشْطًا" },
+          { num: 3, text: "وَٱلسَّـٰبِحَـٰتِ سَبْحًا" },
+          { num: 4, text: "فَٱلسَّـٰبِقَـٰتِ سَبْقًا" },
+          { num: 5, text: "فَٱلْمُدَبِّرَٰتِ أَمْرًا" },
+          { num: 6, text: "يَوْمَ تَرْجُفُ ٱلرَّاجِفَةُ" },
+          { num: 7, text: "تَتْبَعُهَا ٱلرَّادِفَةُ" },
+          { num: 8, text: "قُلُوبٌ يَوْمَئِذٍ وَاجِفَةٌ" }
+        ]
+      },
+      {
+        level: 3, number: 78, name: "An-Naba'",
+        verses: [
+          { num: 1, text: "عَمَّ يَتَسَآءَلُونَ" },
+          { num: 2, text: "عَنِ ٱلنَّبَإِ ٱلْعَظِيمِ" },
+          { num: 3, text: "ٱلَّذِى هُمْ فِيهِ مُخْتَلِفُونَ" },
+          { num: 4, text: "كَلَّا سَيَعْلَمُونَ" },
+          { num: 5, text: "ثُمَّ كَلَّا سَيَعْلَمُونَ" },
+          { num: 6, text: "أَلَمْ نَجْعَلِ ٱلْأَرْضَ مِهَـٰدًا" },
+          { num: 7, text: "وَٱلْجِبَالَ أَوْتَادًا" },
+          { num: 8, text: "وَخَلَقْنَـٰكُمْ أَزْوَٰجًا" }
+        ]
+      }
+    ];
+
+    /**
+     * ============================================================================
+     * 2. GROUP IDENTITY COLOR PALETTES (A: Biru, B: Hijau, C: Kuning, D: Ungu, E: Merah)
+     * ============================================================================
+     */
+    const GROUP_THEMES = [
+      {
+        id: 0,
+        defaultName: "Kelompok A (Biru)",
+        colorName: "Biru",
+        badgeBg: "bg-blue-500",
+        headerGrad: "from-blue-600 to-sky-500",
+        border: "border-blue-400",
+        panelBg: "bg-blue-950/60",
+        slotBg: "bg-blue-900/40",
+        cardBg: "bg-white text-slate-900 border-blue-300",
+        accentText: "text-sky-300",
+        btnBg: "bg-blue-500 hover:bg-blue-400 text-white"
+      },
+      {
+        id: 1,
+        defaultName: "Kelompok B (Hijau)",
+        colorName: "Hijau",
+        badgeBg: "bg-emerald-500",
+        headerGrad: "from-emerald-600 to-teal-500",
+        border: "border-emerald-400",
+        panelBg: "bg-emerald-950/60",
+        slotBg: "bg-emerald-900/40",
+        cardBg: "bg-white text-slate-900 border-emerald-300",
+        accentText: "text-emerald-300",
+        btnBg: "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
+      },
+      {
+        id: 2,
+        defaultName: "Kelompok C (Kuning)",
+        colorName: "Kuning",
+        badgeBg: "bg-amber-400 text-slate-950",
+        headerGrad: "from-amber-500 to-yellow-500 text-slate-950",
+        border: "border-amber-400",
+        panelBg: "bg-amber-950/55",
+        slotBg: "bg-amber-900/35",
+        cardBg: "bg-white text-slate-900 border-amber-300",
+        accentText: "text-amber-300",
+        btnBg: "bg-amber-400 hover:bg-amber-300 text-slate-950"
+      },
+      {
+        id: 3,
+        defaultName: "Kelompok D (Ungu)",
+        colorName: "Ungu",
+        badgeBg: "bg-purple-500",
+        headerGrad: "from-purple-600 to-fuchsia-500",
+        border: "border-purple-400",
+        panelBg: "bg-purple-950/60",
+        slotBg: "bg-purple-900/40",
+        cardBg: "bg-white text-slate-900 border-purple-300",
+        accentText: "text-purple-300",
+        btnBg: "bg-purple-500 hover:bg-purple-400 text-white"
+      },
+      {
+        id: 4,
+        defaultName: "Kelompok E (Merah)",
+        colorName: "Merah",
+        badgeBg: "bg-rose-500",
+        headerGrad: "from-rose-600 to-red-500",
+        border: "border-rose-400",
+        panelBg: "bg-rose-950/60",
+        slotBg: "bg-rose-900/40",
+        cardBg: "bg-white text-slate-900 border-rose-300",
+        accentText: "text-rose-300",
+        btnBg: "bg-rose-500 hover:bg-rose-400 text-white"
+      }
+    ];
+
+    /**
+     * ============================================================================
+     * 3. WEB AUDIO API SOUND EFFECTS (Zero external URLs, offline-ready)
+     * ============================================================================
+     */
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+      document.getElementById('sound-label').textContent = soundEnabled ? 'Suara Aktif' : 'Bisukan';
+      if (soundEnabled) playTone(523.25, 0.1, 'sine');
+    }
+
+    function playTone(freq, duration = 0.15, type = 'sine', delay = 0, vol = 0.14) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+        gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + duration);
+      } catch (e) {
+        // Ignore audio errors on restricted devices
+      }
+    }
+
+    function playSoundEffect(kind) {
+      if (!soundEnabled) return;
+      if (kind === 'pickup') {
+        playTone(440, 0.08, 'triangle', 0, 0.1);
+      } else if (kind === 'drop') {
+        playTone(587.33, 0.1, 'sine', 0, 0.12);
+      } else if (kind === 'correct') {
+        playTone(523.25, 0.14, 'triangle', 0, 0.16);
+        playTone(659.25, 0.14, 'triangle', 0.1, 0.16);
+        playTone(783.99, 0.16, 'triangle', 0.2, 0.16);
+        playTone(1046.50, 0.35, 'triangle', 0.3, 0.18);
+      } else if (kind === 'wrong') {
+        playTone(260, 0.16, 'sawtooth', 0, 0.1);
+        playTone(210, 0.24, 'sawtooth', 0.14, 0.1);
+      } else if (kind === 'tick') {
+        playTone(880, 0.06, 'sine', 0, 0.08);
+      } else if (kind === 'fanfare') {
+        const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+        notes.forEach((n, idx) => playTone(n, 0.18, 'triangle', idx * 0.13, 0.18));
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 4. APPLICATION STATE & CONFIGURATION
+     * ============================================================================
+     */
+    const config = {
+      level: 1,
+      selectedSurah: "ALL",
+      gameMode: "PUZZLE", // PUZZLE | SAMBUNG | TEBAK | CAMPURAN
+      competitionMode: "DIFFERENT", // DIFFERENT | SAME
+      pieceCount: 5,
+      duration: 60,
+      totalRounds: 3,
+      groupCount: 2,
+      enableSpeedBonus: true,
+      points: {
+        PUZZLE: 15,
+        SAMBUNG: 15,
+        TEBAK: 15,
+        SPEED: 5,
+        ORAL: 10
+      }
+    };
+
+    let groupsState = [];
+    let sessionState = {
+      currentRound: 1,
+      roundMode: "PUZZLE",
+      timeRemaining: 60,
+      roundElapsed: 0,
+      isPaused: false,
+      roundEnded: false,
+      timerInterval: null,
+      usedSurahNumbers: new Set(),
+      correctOrderCount: 0
+    };
+
+    // Drag & Tap State isolated per group
+    let activeDragPayload = null; // { groupIdx, cardId, fromSlotIdx }
+    let selectedTapCard = {}; // { [groupIdx]: cardId }
+
+    /**
+     * ============================================================================
+     * 5. INITIALIZATION & SETUP UI LOGIC
+     * ============================================================================
+     */
+    function initApp() {
+      // Initialize default 5 group definitions
+      groupsState = GROUP_THEMES.map((theme, idx) => ({
+        index: idx,
+        name: theme.defaultName,
+        theme: theme,
+        score: 0,
+        puzzlesSolved: 0,
+        correctCount: 0,
+        wrongCount: 0,
+        totalTimeSpent: 0,
+        // Per-round state
+        question: null,
+        locked: false,
+        isCorrect: false,
+        feedbackMsg: "",
+        // Puzzle mode specific
+        poolCards: [],
+        slotCards: [],
+        slotStatus: [], // 'neutral' | 'right' | 'wrong'
+        // Multiple choice specific (Sambung / Tebak)
+        selectedOptionIdx: null
+      }));
+
+      selectLevel(1);
+      selectGameMode("PUZZLE");
+      setGroupCount(2);
+    }
+
+    function selectLevel(lvl) {
+      config.level = lvl;
+      config.selectedSurah = "ALL";
+
+      document.querySelectorAll('.level-card').forEach(btn => {
+        const bLvl = parseInt(btn.dataset.level);
+        if (bLvl === lvl) {
+          btn.classList.remove('bg-slate-800/90', 'border-slate-600');
+          if (lvl === 1) btn.classList.add('bg-emerald-500/25', 'border-emerald-400');
+          if (lvl === 2) btn.classList.add('bg-sky-500/25', 'border-sky-400');
+          if (lvl === 3) btn.classList.add('bg-purple-500/25', 'border-purple-400');
+        } else {
+          btn.className = 'level-card text-left p-3.5 rounded-2xl border-2 transition-all bg-slate-800/90 border-slate-600 hover:border-slate-400';
+        }
+      });
+
+      // Populate Surah dropdown strictly for this level
+      const surahSelect = document.getElementById('setup-surah-select');
+      const surahsInLevel = QURAN_BANK.filter(s => s.level === lvl);
+      surahSelect.innerHTML = `<option value="ALL">🎲 Acak Seluruh Surat Level ${lvl} (${surahsInLevel.length} Surat)</option>`;
+      surahsInLevel.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = String(s.number);
+        opt.textContent = `QS. ${s.name} (Surat ke-${s.number} • ${s.verses.length} Ayat)`;
+        surahSelect.appendChild(opt);
+      });
+    }
+
+    function selectGameMode(mode) {
+      config.gameMode = mode;
+      document.querySelectorAll('.mode-card').forEach(btn => {
+        if (btn.dataset.mode === mode) {
+          btn.classList.remove('bg-slate-800', 'border-slate-600');
+          btn.classList.add('bg-amber-400/25', 'border-amber-400');
+        } else {
+          btn.className = 'mode-card p-3 rounded-2xl border-2 text-center transition-all bg-slate-800 border-slate-600 hover:border-amber-300';
+        }
+      });
+    }
+
+    function setGroupCount(count) {
+      config.groupCount = count;
+      document.querySelectorAll('.grp-count-btn').forEach(btn => {
+        if (parseInt(btn.dataset.count) === count) {
+          btn.className = 'grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold bg-amber-400 text-slate-950 shadow';
+        } else {
+          btn.className = 'grp-count-btn px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-300 hover:bg-slate-800';
+        }
+      });
+      renderSetupGroups();
+    }
+
+    function renderSetupGroups() {
+      const container = document.getElementById('setup-groups-list');
+      container.innerHTML = '';
+      for (let i = 0; i < config.groupCount; i++) {
+        const g = groupsState[i];
+        const row = document.createElement('div');
+        row.className = `flex items-center gap-3 p-2.5 rounded-2xl bg-slate-900/90 border-2 ${g.theme.border}`;
+        row.innerHTML = `
+          <div class="w-9 h-9 rounded-xl ${g.theme.badgeBg} flex items-center justify-center font-fredoka font-extrabold text-sm shadow shrink-0">
+            ${String.fromCharCode(65 + i)}
+          </div>
+          <input
+            type="text"
+            value="${escapeHtml(g.name)}"
+            onchange="groupsState[${i}].name = this.value.trim() || '${g.theme.defaultName}'"
+            class="flex-1 bg-transparent border-b border-slate-700 focus:border-amber-400 text-white font-bold text-sm px-1 py-1 focus:outline-none"
+            placeholder="Nama Kelompok ${String.fromCharCode(65 + i)}"
+          />
+          <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-slate-800 ${g.theme.accentText}">
+            ${g.theme.colorName}
+          </span>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 6. QUESTION GENERATION & RANDOMIZATION ENGINE (NO REPEATS, LEVEL STRICT)
+     * ============================================================================
+     */
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function getLevelSurahs() {
+      const levelSurahs = QURAN_BANK.filter(s => s.level === config.level);
+      if (config.selectedSurah !== "ALL") {
+        const specific = levelSurahs.find(s => String(s.number) === String(config.selectedSurah));
+        return specific ? [specific] : levelSurahs;
+      }
+      return levelSurahs;
+    }
+
+    function pickSurahsForRound(countNeeded, mode) {
+      let pool = getLevelSurahs();
+
+      // For Puzzle mode, prefer surahs with >= 5 verses if available when ALL is selected,
+      // unless user specifically chose a shorter surah (like Al-Ikhlas 4 verses).
+      if (mode === "PUZZLE" && config.selectedSurah === "ALL") {
+        const fivePlus = pool.filter(s => s.verses.length >= 5);
+        if (fivePlus.length >= countNeeded) {
+          pool = fivePlus;
+        }
+      }
+
+      // Filter out already used Surahs in this session while unused ones remain
+      let unused = pool.filter(s => !sessionState.usedSurahNumbers.has(s.number));
+      if (unused.length < countNeeded) {
+        // Reset session tracking if we exhausted all surahs in the level
+        sessionState.usedSurahNumbers.clear();
+        unused = [...pool];
+      }
+
+      const shuffled = shuffleArray(unused);
+      const chosen = [];
+      for (let i = 0; i < countNeeded; i++) {
+        const surah = shuffled[i % shuffled.length];
+        chosen.push(surah);
+        sessionState.usedSurahNumbers.add(surah.number);
+      }
+      return chosen;
+    }
+
+    function buildQuestionForMode(surah, mode) {
+      if (mode === "PUZZLE") {
+        // Take consecutive verses up to config.pieceCount (or full surah if shorter)
+        const targetCount = Math.min(config.pieceCount, surah.verses.length);
+        const maxStart = Math.max(0, surah.verses.length - targetCount);
+        const startIdx = maxStart > 0 ? Math.floor(Math.random() * (maxStart + 1)) : 0;
+        const slice = surah.verses.slice(startIdx, startIdx + targetCount);
+
+        const orderedCards = slice.map((v, idx) => ({
+          id: `s${surah.number}_v${v.num}_${idx}`,
+          surahName: surah.name,
+          surahNumber: surah.number,
+          verseNum: v.num,
+          correctIndex: idx,
+          text: v.text
+        }));
+
+        // Ensure shuffled order isn't accidentally already solved
+        let shuffledCards = shuffleArray(orderedCards);
+        if (shuffledCards.length > 1 && shuffledCards.every((c, idx) => c.correctIndex === idx)) {
+          [shuffledCards[0], shuffledCards[1]] = [shuffledCards[1], shuffledCards[0]];
+        }
+
+        return {
+          mode: "PUZZLE",
+          surahName: surah.name,
+          surahNumber: surah.number,
+          startVerse: slice[0].num,
+          endVerse: slice[slice.length - 1].num,
+          orderedCards,
+          shuffledCards
+        };
+      }
+
+      if (mode === "SAMBUNG") {
+        // Pick a prompt verse that has a next verse (0 to length - 2)
+        const maxIdx = surah.verses.length - 2;
+        const promptIdx = Math.floor(Math.random() * (maxIdx + 1));
+        const promptVerse = surah.verses[promptIdx];
+        const correctNextVerse = surah.verses[promptIdx + 1];
+
+        // Build 3 distractors from the same level (avoiding the exact correct verse text)
+        const levelSurahs = QURAN_BANK.filter(s => s.level === config.level);
+        const distractorPool = [];
+        levelSurahs.forEach(s => {
+          s.verses.forEach(v => {
+            if (v.text !== correctNextVerse.text && v.text !== promptVerse.text) {
+              distractorPool.push({
+                text: v.text,
+                ref: `QS. ${s.name}: ${v.num}`
+              });
+            }
+          });
+        });
+
+        const distractors = shuffleArray(distractorPool).slice(0, 3);
+        const options = shuffleArray([
+          { text: correctNextVerse.text, ref: `QS. ${surah.name}: ${correctNextVerse.num}`, isCorrect: true },
+          ...distractors.map(d => ({ ...d, isCorrect: false }))
+        ]);
+
+        return {
+          mode: "SAMBUNG",
+          surahName: surah.name,
+          surahNumber: surah.number,
+          promptVerse,
+          correctNextVerse,
+          options
+        };
+      }
+
+      // MODE C: TEBAK NAMA SURAT
+      const sampleCount = Math.min(2, surah.verses.length);
+      const maxStart = Math.max(0, surah.verses.length - sampleCount);
+      const startIdx = Math.floor(Math.random() * (maxStart + 1));
+      const clueVerses = surah.verses.slice(startIdx, startIdx + sampleCount);
+
+      const levelSurahs = QURAN_BANK.filter(s => s.level === config.level && s.number !== surah.number);
+      const distractorSurahs = shuffleArray(levelSurahs).slice(0, 3);
+      const options = shuffleArray([
+        { surahName: surah.name, surahNumber: surah.number, isCorrect: true },
+        ...distractorSurahs.map(ds => ({ surahName: ds.name, surahNumber: ds.number, isCorrect: false }))
+      ]);
+
+      return {
+        mode: "TEBAK",
+        surahName: surah.name,
+        surahNumber: surah.number,
+        clueVerses,
+        options
+      };
+    }
+
+    /**
+     * ============================================================================
+     * 7. SESSION & ROUND LIFECYCLE MANAGEMENT
+     * ============================================================================
+     */
+    function startNewSession() {
+      getAudioCtx();
+      playSoundEffect('drop');
+
+      // Reset scores & counters for active groups
+      for (let i = 0; i < config.groupCount; i++) {
+        groupsState[i].score = 0;
+        groupsState[i].puzzlesSolved = 0;
+        groupsState[i].correctCount = 0;
+        groupsState[i].wrongCount = 0;
+        groupsState[i].totalTimeSpent = 0;
+      }
+
+      sessionState.currentRound = 1;
+      sessionState.usedSurahNumbers.clear();
+
+      document.getElementById('screen-setup').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('screen-game').classList.remove('hidden');
+      document.getElementById('hud-center').classList.remove('hidden');
+      document.getElementById('confetti-container').classList.add('hidden');
+
+      setupRound(1);
+    }
+
+    function returnToSetup() {
+      clearInterval(sessionState.timerInterval);
+      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('hud-center').classList.add('hidden');
+      document.getElementById('confetti-container').classList.add('hidden');
+      document.getElementById('screen-setup').classList.remove('hidden');
+      renderSetupGroups();
+    }
+
+    function setupRound(roundNum) {
+      clearInterval(sessionState.timerInterval);
+      sessionState.currentRound = roundNum;
+      sessionState.timeRemaining = config.duration;
+      sessionState.roundElapsed = 0;
+      sessionState.isPaused = false;
+      sessionState.roundEnded = false;
+      sessionState.correctOrderCount = 0;
+      selectedTapCard = {};
+
+      // Determine active mode for this round
+      const modesCycle = ["PUZZLE", "SAMBUNG", "TEBAK"];
+      const activeMode = config.gameMode === "CAMPURAN"
+        ? modesCycle[(roundNum - 1) % modesCycle.length]
+        : config.gameMode;
+      sessionState.roundMode = activeMode;
+
+      // Update HUD Badges
+      document.getElementById('hud-round').textContent = `${roundNum} / ${config.totalRounds}`;
+      const levelNames = { 1: "Level 1 • Dasar", 2: "Level 2 • Menengah", 3: "Level 3 • Lanjutan" };
+      const modeNames = {
+        PUZZLE: "Mode A: Puzzle Susun Ayat",
+        SAMBUNG: "Mode B: Sambung Ayat",
+        TEBAK: "Mode C: Tebak Nama Surat"
+      };
+      const instructionMap = {
+        PUZZLE: "🧩 Seret (atau ketuk) potongan ayat ke slot urutan 1, 2, 3... lalu tekan KUNCI JAWABAN!",
+        SAMBUNG: "🔗 Baca ayat petunjuk, pilih lanjutan ayat yang tepat sesuai mushaf, lalu tekan KUNCI JAWABAN!",
+        TEBAK: "🕌 Baca potongan ayat dengan teliti, pilih nama surat yang benar, lalu tekan KUNCI JAWABAN!"
+      };
+
+      document.getElementById('hud-level-badge').textContent = levelNames[config.level];
+      document.getElementById('hud-mode-badge').textContent = modeNames[activeMode];
+      document.getElementById('arena-instruction-banner').textContent = instructionMap[activeMode];
+      document.getElementById('next-round-label').textContent =
+        roundNum < config.totalRounds ? "Babak Berikutnya ➡️" : "Lihat Pemenang 🏆";
+      document.getElementById('pause-label').textContent = "Jeda";
+
+      // Assign Questions to each active group
+      if (config.competitionMode === "SAME") {
+        const [sharedSurah] = pickSurahsForRound(1, activeMode);
+        const templateQ = buildQuestionForMode(sharedSurah, activeMode);
+        for (let i = 0; i < config.groupCount; i++) {
+          assignQuestionToGroup(i, JSON.parse(JSON.stringify(templateQ)));
+        }
+      } else {
+        const chosenSurahs = pickSurahsForRound(config.groupCount, activeMode);
+        for (let i = 0; i < config.groupCount; i++) {
+          const q = buildQuestionForMode(chosenSurahs[i], activeMode);
+          assignQuestionToGroup(i, q);
+        }
+      }
+
+      updateTimerDisplay();
+      renderArenaGrid();
+      startRoundTimer();
+    }
+
+    function assignQuestionToGroup(groupIdx, q) {
+      const g = groupsState[groupIdx];
+      g.question = q;
+      g.locked = false;
+      g.isCorrect = false;
+      g.feedbackMsg = "";
+      g.selectedOptionIdx = null;
+
+      if (q.mode === "PUZZLE") {
+        g.poolCards = [...q.shuffledCards];
+        g.slotCards = new Array(q.orderedCards.length).fill(null);
+        g.slotStatus = new Array(q.orderedCards.length).fill('neutral');
+      } else {
+        g.poolCards = [];
+        g.slotCards = [];
+        g.slotStatus = [];
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 8. SYNCHRONIZED COUNTDOWN TIMER
+     * ============================================================================
+     */
+    function startRoundTimer() {
+      clearInterval(sessionState.timerInterval);
+      sessionState.timerInterval = setInterval(() => {
+        if (sessionState.isPaused || sessionState.roundEnded) return;
+
+        sessionState.timeRemaining--;
+        sessionState.roundElapsed++;
+        updateTimerDisplay();
+
+        if (sessionState.timeRemaining <= 10 && sessionState.timeRemaining > 0) {
+          playSoundEffect('tick');
+        }
+
+        if (sessionState.timeRemaining <= 0) {
+          handleTimeUp();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerEl = document.getElementById('hud-timer');
+      const boxEl = document.getElementById('timer-box');
+      timerEl.textContent = Math.max(0, sessionState.timeRemaining);
+
+      if (sessionState.timeRemaining <= 10 && !sessionState.roundEnded) {
+        timerEl.classList.remove('text-amber-300');
+        timerEl.classList.add('text-rose-400');
+        boxEl.classList.add('timer-urgent', 'border-rose-500', 'bg-rose-950');
+      } else {
+        timerEl.classList.add('text-amber-300');
+        timerEl.classList.remove('text-rose-400');
+        boxEl.classList.remove('timer-urgent', 'border-rose-500', 'bg-rose-950');
+      }
+    }
+
+    function togglePauseTimer() {
+      if (sessionState.roundEnded) return;
+      sessionState.isPaused = !sessionState.isPaused;
+      document.getElementById('pause-label').textContent = sessionState.isPaused ? "Lanjut" : "Jeda";
+      showToast(sessionState.isPaused ? "⏸️ Waktu Dijeda Sementara" : "▶️ Waktu Dilanjutkan!", "⏱️");
+      renderArenaGrid();
+    }
+
+    function addExtraTime(seconds) {
+      sessionState.timeRemaining += seconds;
+      if (sessionState.roundEnded) {
+        sessionState.roundEnded = false;
+        startRoundTimer();
+      }
+      updateTimerDisplay();
+      playSoundEffect('drop');
+      showToast(`⏱️ Guru menambahkan +${seconds} detik!`, "✨");
+    }
+
+    function handleTimeUp() {
+      clearInterval(sessionState.timerInterval);
+      sessionState.roundEnded = true;
+      showToast("⏰ Waktu Habis! Semua jawaban otomatis dikunci.", "⏰");
+
+      // Automatically lock & evaluate any unlocked groups
+      for (let i = 0; i < config.groupCount; i++) {
+        if (!groupsState[i].locked) {
+          evaluateGroupSubmission(i, true);
+        }
+      }
+      renderArenaGrid();
+    }
+
+    /**
+     * ============================================================================
+     * 9. INTERACTIVE MULTI-GROUP ARENA RENDERING & ISOLATED DRAG/TAP CONTROLS
+     * ============================================================================
+     */
+    function renderArenaGrid() {
+      const grid = document.getElementById('groups-arena-grid');
+      // Responsive grid columns for 2, 3, 4, or 5 groups on 16:9 screen
+      const gridColsClass = {
+        2: "grid-cols-1 md:grid-cols-2",
+        3: "grid-cols-1 md:grid-cols-3",
+        4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+        5: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
+      }[config.groupCount] || "grid-cols-2";
+
+      grid.className = `flex-1 grid ${gridColsClass} gap-2.5 sm:gap-3 min-h-0`;
+      grid.innerHTML = '';
+
+      for (let i = 0; i < config.groupCount; i++) {
+        const g = groupsState[i];
+        const board = document.createElement('section');
+        board.className = `rounded-3xl border-2 ${g.theme.border} ${g.theme.panelBg} backdrop-blur-md flex flex-col overflow-hidden shadow-xl transition-all`;
+
+        // Calculate progress percentage
+        let progressPct = 0;
+        if (g.locked && g.isCorrect) {
+          progressPct = 100;
+        } else if (g.question.mode === "PUZZLE") {
+          const filled = g.slotCards.filter(Boolean).length;
+          progressPct = Math.round((filled / g.slotCards.length) * 100);
+        } else {
+          progressPct = g.selectedOptionIdx !== null ? 100 : 0;
+        }
+
+        // Group Header Bar
+        const headerHtml = `
+          <div class="bg-gradient-to-r ${g.theme.headerGrad} px-3 py-2 flex items-center justify-between gap-2 shrink-0">
+            <div class="min-w-0">
+              <div class="font-fredoka font-extrabold text-sm sm:text-base truncate">${escapeHtml(g.name)}</div>
+              <div class="flex items-center gap-2 text-[11px] font-extrabold opacity-90">
+                <span>✅ ${g.correctCount}</span>
+                <span>❌ ${g.wrongCount}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="awardOralPoints(${i})" title="Tambah Poin Hafalan Lisan (+${config.points.ORAL})" class="px-2 py-1 rounded-xl bg-black/25 hover:bg-black/40 text-white text-[11px] font-extrabold">
+                +Lisan
+              </button>
+              <div class="px-2.5 py-1 rounded-xl bg-slate-950/85 text-amber-300 font-fredoka font-extrabold text-sm sm:text-base shadow">
+                ⭐ ${g.score}
+              </div>
+            </div>
+          </div>
+          <!-- Progress Bar -->
+          <div class="w-full h-1.5 bg-slate-950/60 shrink-0">
+            <div class="h-full bg-amber-300 transition-all duration-300" style="width: ${progressPct}%"></div>
+          </div>
+        `;
+
+        // Workspace Body depending on Game Mode
+        let workspaceHtml = '';
+        if (g.question.mode === "PUZZLE") {
+          workspaceHtml = renderPuzzleWorkspace(i, g);
+        } else if (g.question.mode === "SAMBUNG") {
+          workspaceHtml = renderSambungWorkspace(i, g);
+        } else {
+          workspaceHtml = renderTebakWorkspace(i, g);
+        }
+
+        // Group Footer Action Button
+        const footerHtml = renderGroupFooter(i, g);
+
+        board.innerHTML = headerHtml + workspaceHtml + footerHtml;
+        grid.appendChild(board);
+      }
+    }
+
+    function renderPuzzleWorkspace(gIdx, g) {
+      const q = g.question;
+      const isCompact = config.groupCount >= 4;
+      const arabicSize = isCompact ? "text-lg sm:text-xl" : "text-xl sm:text-2xl";
+
+      // Slots Section (Target Sequence 1..N)
+      let slotsHtml = `<div class="space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] font-extrabold text-slate-300 px-1">
+          <span>📥 SLOT URUTAN AYAT (1 – ${g.slotCards.length})</span>
+          ${g.locked && g.isCorrect ? `<span class="text-emerald-300">QS. ${q.surahName}: ${q.startVerse}–${q.endVerse}</span>` : ''}
+        </div>`;
+
+      g.slotCards.forEach((card, sIdx) => {
+        const status = g.slotStatus[sIdx];
+        let slotBorder = "border-dashed border-slate-500/70 bg-slate-950/40";
+        if (card) {
+          if (status === 'right') slotBorder = "border-solid border-emerald-400 bg-emerald-500/20";
+          else if (status === 'wrong') slotBorder = "border-solid border-rose-400 bg-rose-500/25";
+          else slotBorder = `border-solid ${g.theme.border} ${g.theme.slotBg}`;
+        }
+
+        slotsHtml += `
+          <div
+            class="drop-slot rounded-xl border-2 ${slotBorder} p-1.5 min-h-[46px] flex items-center gap-2"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDropOnSlot(event, ${gIdx}, ${sIdx})"
+            onclick="handleSlotTap(${gIdx}, ${sIdx})"
+          >
+            <div class="w-6 h-6 rounded-lg bg-slate-900 text-amber-300 font-fredoka font-extrabold text-xs flex items-center justify-center shrink-0">
+              ${sIdx + 1}
+            </div>
+            ${card ? `
+              <div
+                draggable="${!g.locked && !sessionState.isPaused}"
+                ondragstart="handleDragStart(event, ${gIdx}, '${card.id}', ${sIdx})"
+                ondragend="handleDragEnd(event)"
+                onclick="event.stopPropagation(); handleCardTap(${gIdx}, '${card.id}', ${sIdx})"
+                class="ayah-card flex-1 rounded-lg px-2.5 py-1 ${g.theme.cardBg} border shadow-sm flex items-center justify-between gap-2 ${selectedTapCard[gIdx] === card.id ? 'selected-for-tap' : ''}"
+              >
+                <span class="arabic-text ${arabicSize} font-bold text-slate-900 text-right flex-1 leading-snug">${card.text}</span>
+                ${g.locked && g.isCorrect ? `<span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 shrink-0">${card.verseNum}</span>` : ''}
+              </div>
+            ` : `
+              <div class="flex-1 text-center text-[11px] font-bold text-slate-400">
+                ${selectedTapCard[gIdx] ? '👆 Ketuk untuk meletakkan ayat di sini' : 'Taruh ayat ke-' + (sIdx + 1)}
+              </div>
+            `}
+          </div>
+        `;
+      });
+      slotsHtml += `</div>`;
+
+      // Shuffled Pool Section
+      let poolHtml = '';
+      if (!g.locked || !g.isCorrect) {
+        poolHtml = `
+          <div
+            class="mt-2.5 pt-2 border-t border-slate-700/80 space-y-1.5"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDropOnPool(event, ${gIdx})"
+          >
+            <div class="text-[11px] font-extrabold text-amber-300 px-1">
+              🧩 POTONGAN AYAT ACAK (${g.poolCards.length} tersisa)
+            </div>
+            <div class="space-y-1.5">
+              ${g.poolCards.map(card => `
+                <div
+                  draggable="${!g.locked && !sessionState.isPaused}"
+                  ondragstart="handleDragStart(event, ${gIdx}, '${card.id}', null)"
+                  ondragend="handleDragEnd(event)"
+                  onclick="handleCardTap(${gIdx}, '${card.id}', null)"
+                  class="ayah-card rounded-xl px-3 py-1.5 ${g.theme.cardBg} border-2 shadow flex items-center justify-between gap-2 ${selectedTapCard[gIdx] === card.id ? 'selected-for-tap' : ''}"
+                >
+                  <span class="text-slate-400 text-xs shrink-0">⠿</span>
+                  <span class="arabic-text ${arabicSize} font-bold text-slate-900 text-right flex-1 leading-snug">${card.text}</span>
+                </div>
+              `).join('')}
+              ${g.poolCards.length === 0 ? `<div class="text-center text-xs text-emerald-300 font-bold py-1">✨ Semua potongan sudah masuk slot! Tekan Kunci Jawaban.</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      return `<div class="flex-1 p-2.5 overflow-y-auto custom-scroll">${slotsHtml}${poolHtml}</div>`;
+    }
+
+    function renderSambungWorkspace(gIdx, g) {
+      const q = g.question;
+      const isCompact = config.groupCount >= 4;
+      const arabicSize = isCompact ? "text-lg sm:text-xl" : "text-xl sm:text-2xl";
+
+      return `
+        <div class="flex-1 p-2.5 overflow-y-auto custom-scroll flex flex-col justify-between gap-2.5">
+          <!-- Prompt Verse Card -->
+          <div class="rounded-2xl bg-slate-950/75 border-2 border-amber-400/50 p-3 text-center shadow-inner">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[11px] font-extrabold mb-1.5">
+              📖 QS. ${q.surahName} • Ayat ${q.promptVerse.num}
+            </div>
+            <div class="arabic-text ${arabicSize} font-bold text-white leading-relaxed">
+              ${q.promptVerse.text}
+            </div>
+            <div class="text-[11px] font-bold text-slate-300 mt-1.5">
+              Pilih kelanjutan ayat ke-${q.correctNextVerse.num} di bawah ini:
+            </div>
+          </div>
+
+          <!-- 4 Multiple Choice Options -->
+          <div class="space-y-1.5">
+            ${q.options.map((opt, idx) => {
+              const isSelected = g.selectedOptionIdx === idx;
+              let btnStyle = "bg-white text-slate-900 border-slate-300 hover:border-amber-400";
+              if (g.locked) {
+                if (opt.isCorrect) btnStyle = "bg-emerald-500 text-white border-emerald-300";
+                else if (isSelected && !opt.isCorrect) btnStyle = "bg-rose-500 text-white border-rose-300";
+                else btnStyle = "bg-slate-800/70 text-slate-400 border-slate-700";
+              } else if (isSelected) {
+                btnStyle = "bg-amber-300 text-slate-950 border-amber-500 ring-2 ring-amber-400";
+              }
+
+              return `
+                <button
+                  type="button"
+                  ${g.locked || sessionState.isPaused ? 'disabled' : ''}
+                  onclick="selectOptionForGroup(${gIdx}, ${idx})"
+                  class="w-full text-right p-2.5 rounded-xl border-2 transition-all flex items-center justify-between gap-2 shadow-sm ${btnStyle}"
+                >
+                  <span class="w-6 h-6 rounded-lg bg-slate-900/15 font-fredoka font-extrabold text-xs flex items-center justify-center shrink-0">
+                    ${String.fromCharCode(65 + idx)}
+                  </span>
+                  <span class="arabic-text ${arabicSize} font-bold flex-1 leading-snug">${opt.text}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTebakWorkspace(gIdx, g) {
+      const q = g.question;
+      const isCompact = config.groupCount >= 4;
+      const arabicSize = isCompact ? "text-lg sm:text-xl" : "text-xl sm:text-2xl";
+
+      return `
+        <div class="flex-1 p-2.5 overflow-y-auto custom-scroll flex flex-col justify-between gap-2.5">
+          <!-- Clue Verses -->
+          <div class="rounded-2xl bg-slate-950/75 border-2 border-sky-400/50 p-3 text-center shadow-inner">
+            <div class="inline-block px-2.5 py-0.5 rounded-full bg-sky-400/20 text-sky-300 text-[11px] font-extrabold mb-1.5">
+              🕌 Tebak Nama Surat dari Ayat Berikut:
+            </div>
+            <div class="space-y-1">
+              ${q.clueVerses.map(v => `
+                <div class="arabic-text ${arabicSize} font-bold text-white leading-relaxed">${v.text}</div>
+              `).join('')}
+            </div>
+            ${g.locked ? `
+              <div class="mt-2 pt-1.5 border-t border-slate-700 text-xs font-extrabold text-emerald-300">
+                📖 QS. ${q.surahName} (Surat ke-${q.surahNumber} • Ayat ${q.clueVerses.map(v => v.num).join(', ')})
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- 4 Surah Name Choices -->
+          <div class="grid grid-cols-1 gap-1.5">
+            ${q.options.map((opt, idx) => {
+              const isSelected = g.selectedOptionIdx === idx;
+              let btnStyle = "bg-white text-slate-900 border-slate-300 hover:border-sky-400";
+              if (g.locked) {
+                if (opt.isCorrect) btnStyle = "bg-emerald-500 text-white border-emerald-300";
+                else if (isSelected && !opt.isCorrect) btnStyle = "bg-rose-500 text-white border-rose-300";
+                else btnStyle = "bg-slate-800/70 text-slate-400 border-slate-700";
+              } else if (isSelected) {
+                btnStyle = "bg-amber-300 text-slate-950 border-amber-500 ring-2 ring-amber-400";
+              }
+
+              return `
+                <button
+                  type="button"
+                  ${g.locked || sessionState.isPaused ? 'disabled' : ''}
+                  onclick="selectOptionForGroup(${gIdx}, ${idx})"
+                  class="w-full px-3 py-2.5 rounded-xl border-2 transition-all flex items-center justify-between gap-2 font-fredoka font-bold text-sm sm:text-base shadow-sm ${btnStyle}"
+                >
+                  <span class="w-6 h-6 rounded-lg bg-slate-900/15 text-xs font-extrabold flex items-center justify-center shrink-0">
+                    ${String.fromCharCode(65 + idx)}
+                  </span>
+                  <span class="flex-1 text-left">QS. ${opt.surahName}</span>
+                  <span class="text-xs opacity-75">Ke-${opt.surahNumber}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGroupFooter(gIdx, g) {
+      if (g.locked) {
+        return `
+          <div class="p-2.5 bg-slate-950/80 border-t border-slate-700/80 shrink-0 text-center">
+            ${g.isCorrect ? `
+              <div class="py-2 px-3 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-fredoka font-extrabold text-xs sm:text-sm">
+                🌟 BENAR! ${g.feedbackMsg}
+              </div>
+            ` : `
+              <div class="py-2 px-3 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-300 font-fredoka font-extrabold text-xs sm:text-sm">
+                💡 Belum Tepat • ${g.feedbackMsg}
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="p-2.5 bg-slate-950/75 border-t border-slate-700/80 shrink-0 space-y-1.5">
+          ${g.feedbackMsg ? `
+            <div class="text-center text-xs font-extrabold text-amber-300 animate-pulse">
+              ${g.feedbackMsg}
+            </div>
+          ` : ''}
+          <button
+            type="button"
+            id="btn-lock-group-${gIdx}"
+            onclick="handleGroupSubmit(${gIdx}, event)"
+            class="btn-3d w-full py-2.5 px-3 rounded-xl ${g.theme.btnBg} font-fredoka font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-1.5"
+          >
+            <span>🔒</span>
+            <span>KUNCI JAWABAN</span>
+          </button>
+        </div>
+      `;
+    }
+
+    /**
+     * ============================================================================
+     * 10. DRAG-AND-DROP + TAP-TO-PLACE INTERACTIONS (ISOLATED PER GROUP)
+     * ============================================================================
+     */
+    function handleDragStart(event, groupIdx, cardId, fromSlotIdx) {
+      if (groupsState[groupIdx].locked || sessionState.isPaused) {
+        event.preventDefault();
+        return;
+      }
+      activeDragPayload = { groupIdx, cardId, fromSlotIdx };
+      event.target.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      playSoundEffect('pickup');
+    }
+
+    function handleDragEnd(event) {
+      event.target.classList.remove('dragging');
+      document.querySelectorAll('.drop-slot').forEach(el => el.classList.remove('drag-over'));
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      const slotEl = event.currentTarget;
+      if (slotEl.classList.contains('drop-slot')) {
+        slotEl.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDropOnSlot(event, targetGroupIdx, targetSlotIdx) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('drag-over');
+      if (!activeDragPayload) return;
+
+      // Enforce strict group isolation: Group A cannot drop onto Group B
+      if (activeDragPayload.groupIdx !== targetGroupIdx) {
+        showToast("⚠️ Setiap kelompok hanya boleh menyusun papan miliknya sendiri!", "🛡️");
+        activeDragPayload = null;
+        return;
+      }
+
+      moveCardToSlot(targetGroupIdx, activeDragPayload.cardId, activeDragPayload.fromSlotIdx, targetSlotIdx);
+      activeDragPayload = null;
+    }
+
+    function handleDropOnPool(event, targetGroupIdx) {
+      event.preventDefault();
+      if (!activeDragPayload || activeDragPayload.groupIdx !== targetGroupIdx) return;
+      if (activeDragPayload.fromSlotIdx !== null) {
+        returnSlotCardToPool(targetGroupIdx, activeDragPayload.fromSlotIdx);
+      }
+      activeDragPayload = null;
+    }
+
+    // Tap-to-Place Accessibility for Young 1st Graders on Touchscreens/Projectors
+    function handleCardTap(groupIdx, cardId, fromSlotIdx) {
+      const g = groupsState[groupIdx];
+      if (g.locked || sessionState.isPaused) return;
+
+      if (selectedTapCard[groupIdx] === cardId) {
+        // Deselect if tapped again; if it was in a slot, return it to pool
+        delete selectedTapCard[groupIdx];
+        if (fromSlotIdx !== null) {
+          returnSlotCardToPool(groupIdx, fromSlotIdx);
+          return;
+        }
+      } else {
+        selectedTapCard[groupIdx] = cardId;
+        playSoundEffect('pickup');
+      }
+      renderArenaGrid();
+    }
+
+    function handleSlotTap(groupIdx, targetSlotIdx) {
+      const g = groupsState[groupIdx];
+      if (g.locked || sessionState.isPaused) return;
+
+      const selectedId = selectedTapCard[groupIdx];
+      if (selectedId) {
+        // Find where selectedId currently lives
+        const fromSlotIdx = g.slotCards.findIndex(c => c && c.id === selectedId);
+        moveCardToSlot(groupIdx, selectedId, fromSlotIdx !== -1 ? fromSlotIdx : null, targetSlotIdx);
+        delete selectedTapCard[groupIdx];
+      } else if (g.slotCards[targetSlotIdx]) {
+        // Return slot card to pool on tap if nothing is selected
+        returnSlotCardToPool(groupIdx, targetSlotIdx);
+      }
+    }
+
+    function moveCardToSlot(groupIdx, cardId, fromSlotIdx, targetSlotIdx) {
+      const g = groupsState[groupIdx];
+      if (g.locked) return;
+
+      let movingCard = null;
+      if (fromSlotIdx !== null) {
+        movingCard = g.slotCards[fromSlotIdx];
+        g.slotCards[fromSlotIdx] = null;
+        g.slotStatus[fromSlotIdx] = 'neutral';
+      } else {
+        const poolIdx = g.poolCards.findIndex(c => c.id === cardId);
+        if (poolIdx !== -1) {
+          [movingCard] = g.poolCards.splice(poolIdx, 1);
+        }
+      }
+
+      if (!movingCard) return;
+
+      // If target slot already has a card, swap or send back to pool
+      const displacedCard = g.slotCards[targetSlotIdx];
+      if (displacedCard) {
+        if (fromSlotIdx !== null) {
+          g.slotCards[fromSlotIdx] = displacedCard;
+        } else {
+          g.poolCards.push(displacedCard);
+        }
+      }
+
+      g.slotCards[targetSlotIdx] = movingCard;
+      g.slotStatus[targetSlotIdx] = 'neutral';
+      g.feedbackMsg = "";
+      playSoundEffect('drop');
+      renderArenaGrid();
+    }
+
+    function returnSlotCardToPool(groupIdx, slotIdx) {
+      const g = groupsState[groupIdx];
+      if (g.locked) return;
+      const card = g.slotCards[slotIdx];
+      if (!card) return;
+      g.slotCards[slotIdx] = null;
+      g.slotStatus[slotIdx] = 'neutral';
+      g.poolCards.push(card);
+      g.feedbackMsg = "";
+      playSoundEffect('drop');
+      renderArenaGrid();
+    }
+
+    function selectOptionForGroup(groupIdx, optionIdx) {
+      const g = groupsState[groupIdx];
+      if (g.locked || sessionState.isPaused) return;
+      g.selectedOptionIdx = optionIdx;
+      g.feedbackMsg = "";
+      playSoundEffect('pickup');
+      renderArenaGrid();
+    }
+
+    /**
+     * ============================================================================
+     * 11. ANSWER CHECKING, SCORING & STAR PARTICLE ANIMATIONS
+     * ============================================================================
+     */
+    function handleGroupSubmit(groupIdx, event) {
+      if (sessionState.isPaused) {
+        showToast("⏸️ Permainan sedang dijeda oleh Guru.", "⏸️");
+        return;
+      }
+      evaluateGroupSubmission(groupIdx, false, event);
+      renderArenaGrid();
+
+      // Check if all groups have locked their answers
+      const allLocked = groupsState.slice(0, config.groupCount).every(gr => gr.locked);
+      if (allLocked && !sessionState.roundEnded) {
+        clearInterval(sessionState.timerInterval);
+        sessionState.roundEnded = true;
+        showToast("🎉 Semua kelompok telah mengunci jawaban! Silakan lanjutkan.", "🌟");
+      }
+    }
+
+    function evaluateGroupSubmission(groupIdx, forcedByTimeout = false, event = null) {
+      const g = groupsState[groupIdx];
+      const q = g.question;
+
+      if (q.mode === "PUZZLE") {
+        // Check if all slots are filled
+        const allFilled = g.slotCards.every(c => c !== null);
+        if (!allFilled && !forcedByTimeout) {
+          g.feedbackMsg = "⚠️ Lengkapi semua slot ayat terlebih dahulu!";
+          playSoundEffect('wrong');
+          return;
+        }
+
+        let allCorrect = true;
+        g.slotCards.forEach((card, idx) => {
+          if (card && card.correctIndex === idx) {
+            g.slotStatus[idx] = 'right';
+          } else {
+            g.slotStatus[idx] = 'wrong';
+            allCorrect = false;
+          }
+        });
+
+        if (allCorrect) {
+          markGroupCorrect(g, config.points.PUZZLE, event);
+        } else if (forcedByTimeout) {
+          g.locked = true;
+          g.isCorrect = false;
+          g.wrongCount++;
+          g.totalTimeSpent += config.duration;
+          g.feedbackMsg = "Waktu habis (0 poin)";
+        } else {
+          // Allow retry while time remains!
+          g.wrongCount++;
+          g.feedbackMsg = "🔄 Belum tepat! Perbaiki slot berwarna merah selagi waktu masih ada.";
+          playSoundEffect('wrong');
+        }
+      } else {
+        // SAMBUNG or TEBAK mode
+        if (g.selectedOptionIdx === null && !forcedByTimeout) {
+          g.feedbackMsg = "⚠️ Pilih salah satu jawaban terlebih dahulu!";
+          playSoundEffect('wrong');
+          return;
+        }
+
+        const chosenOpt = g.selectedOptionIdx !== null ? q.options[g.selectedOptionIdx] : null;
+        if (chosenOpt && chosenOpt.isCorrect) {
+          const pts = q.mode === "SAMBUNG" ? config.points.SAMBUNG : config.points.TEBAK;
+          markGroupCorrect(g, pts, event);
+        } else if (forcedByTimeout) {
+          g.locked = true;
+          g.isCorrect = false;
+          g.wrongCount++;
+          g.totalTimeSpent += config.duration;
+          g.feedbackMsg = "Waktu habis (0 poin)";
+        } else {
+          // Allow retry while time remains
+          g.wrongCount++;
+          g.feedbackMsg = "🔄 Belum tepat! Coba baca lagi dan pilih jawaban lain.";
+          playSoundEffect('wrong');
+        }
+      }
+    }
+
+    function markGroupCorrect(g, basePoints, event = null) {
+      g.locked = true;
+      g.isCorrect = true;
+      g.correctCount++;
+      g.puzzlesSolved++;
+      g.totalTimeSpent += Math.max(1, sessionState.roundElapsed);
+
+      // Calculate speed bonus (awarded to correct answers while time remains, higher for faster finish)
+      let speedBonus = 0;
+      if (config.enableSpeedBonus && sessionState.timeRemaining > 0) {
+        const orderFactor = Math.max(0, config.points.SPEED - sessionState.correctOrderCount);
+        speedBonus = orderFactor > 0 ? orderFactor : Math.ceil(config.points.SPEED / 2);
+        sessionState.correctOrderCount++;
+      }
+
+      const gained = basePoints + speedBonus;
+      g.score += gained;
+      g.feedbackMsg = speedBonus > 0
+        ? `+${basePoints} Poin (+${speedBonus} Bonus Cepat!)`
+        : `+${basePoints} Poin!`;
+
+      playSoundEffect('correct');
+      spawnStarBurst(event);
+    }
+
+    function awardOralPoints(groupIdx) {
+      const g = groupsState[groupIdx];
+      const pts = config.points.ORAL;
+      g.score += pts;
+      playSoundEffect('correct');
+      showToast(`🌟 +${pts} Poin Hafalan Lisan untuk ${g.name}!`, "📖");
+      renderArenaGrid();
+      renderTeacherOralList();
+    }
+
+    function adjustManualScore(groupIdx, delta) {
+      const g = groupsState[groupIdx];
+      g.score = Math.max(0, g.score + delta);
+      playSoundEffect('drop');
+      renderArenaGrid();
+      renderTeacherOralList();
+    }
+
+    function spawnStarBurst(event) {
+      const cx = event && event.clientX ? event.clientX : window.innerWidth / 2;
+      const cy = event && event.clientY ? event.clientY : window.innerHeight / 2;
+      const icons = ['⭐', '🌟', '✨', '💫'];
+
+      for (let i = 0; i < 12; i++) {
+        const el = document.createElement('div');
+        el.className = 'star-particle';
+        el.textContent = icons[i % icons.length];
+        const angle = (Math.PI * 2 * i) / 12;
+        const dist = 70 + Math.random() * 90;
+        el.style.left = `${cx}px`;
+        el.style.top = `${cy}px`;
+        el.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        el.style.setProperty('--ty', `${Math.sin(angle) * dist - 30}px`);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 12. TEACHER MODALS (SETTINGS, ORAL GRADING, & ANSWER KEY)
+     * ============================================================================
+     */
+    function toggleTeacherModal(show) {
+      const modal = document.getElementById('modal-teacher');
+      if (show) {
+        document.getElementById('cfg-pts-puzzle').value = config.points.PUZZLE;
+        document.getElementById('cfg-pts-sambung').value = config.points.SAMBUNG;
+        document.getElementById('cfg-pts-tebak').value = config.points.TEBAK;
+        document.getElementById('cfg-pts-speed').value = config.points.SPEED;
+        document.getElementById('cfg-pts-oral').value = config.points.ORAL;
+        document.getElementById('cfg-enable-speed').checked = config.enableSpeedBonus;
+        renderTeacherOralList();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderTeacherOralList() {
+      const container = document.getElementById('teacher-oral-grading-list');
+      container.innerHTML = '';
+      for (let i = 0; i < config.groupCount; i++) {
+        const g = groupsState[i];
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2';
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full ${g.theme.badgeBg}"></span>
+            <span class="font-bold text-white">${escapeHtml(g.name)}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-fredoka font-extrabold text-amber-300 mr-2">⭐ ${g.score}</span>
+            <button onclick="adjustManualScore(${i}, -5)" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-extrabold text-white">-5</button>
+            <button onclick="adjustManualScore(${i}, 5)" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-xs font-extrabold text-white">+5</button>
+            <button onclick="awardOralPoints(${i})" class="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-xs font-extrabold text-slate-950">+${config.points.ORAL} Lisan</button>
+          </div>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    function openAnswerKeyModal() {
+      const container = document.getElementById('answer-key-content');
+      container.innerHTML = '';
+
+      for (let i = 0; i < config.groupCount; i++) {
+        const g = groupsState[i];
+        const q = g.question;
+        if (!q) continue;
+
+        const card = document.createElement('div');
+        card.className = `rounded-2xl border-2 ${g.theme.border} bg-slate-800/80 p-4`;
+
+        if (q.mode === "PUZZLE") {
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-fredoka font-extrabold text-base text-white">${escapeHtml(g.name)}</span>
+              <span class="px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-extrabold">
+                QS. ${q.surahName} (Ke-${q.surahNumber}) • Ayat ${q.startVerse}–${q.endVerse}
+              </span>
+            </div>
+            <div class="space-y-1.5">
+              ${q.orderedCards.map((c, idx) => `
+                <div class="flex items-center justify-between gap-3 bg-slate-900/90 px-3 py-2 rounded-xl border border-slate-700">
+                  <span class="text-xs font-extrabold text-emerald-300 shrink-0">Urutan ${idx + 1} (Ayat ${c.verseNum})</span>
+                  <span class="arabic-text text-xl text-white text-right">${c.text}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (q.mode === "SAMBUNG") {
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-fredoka font-extrabold text-base text-white">${escapeHtml(g.name)}</span>
+              <span class="px-3 py-0.5 rounded-full bg-sky-400/20 text-sky-300 text-xs font-extrabold">
+                Sambung Ayat • QS. ${q.surahName} (${q.surahNumber})
+              </span>
+            </div>
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 space-y-2">
+              <div class="text-xs text-slate-400 font-bold">Ayat Soal (Ayat ${q.promptVerse.num}):</div>
+              <div class="arabic-text text-xl text-slate-200 text-right">${q.promptVerse.text}</div>
+              <div class="text-xs text-emerald-300 font-bold pt-1 border-t border-slate-800">Jawaban Benar (Ayat ${q.correctNextVerse.num}):</div>
+              <div class="arabic-text text-xl text-emerald-300 font-bold text-right">${q.correctNextVerse.text}</div>
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-fredoka font-extrabold text-base text-white">${escapeHtml(g.name)}</span>
+              <span class="px-3 py-0.5 rounded-full bg-purple-400/20 text-purple-300 text-xs font-extrabold">
+                Tebak Nama Surat
+              </span>
+            </div>
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center justify-between">
+              <span class="font-bold text-emerald-300">Jawaban: QS. ${q.surahName} (Surat ke-${q.surahNumber})</span>
+              <span class="text-xs text-slate-300">Ayat ${q.clueVerses.map(v => v.num).join(', ')}</span>
+            </div>
+          `;
+        }
+
+        container.appendChild(card);
+      }
+
+      document.getElementById('modal-answer-key').classList.remove('hidden');
+    }
+
+    function closeAnswerKeyModal() {
+      document.getElementById('modal-answer-key').classList.add('hidden');
+    }
+
+    /**
+     * ============================================================================
+     * 13. ROUND PROGRESSION & FINAL WINNER PODIUM
+     * ============================================================================
+     */
+    function advanceRoundOrFinish() {
+      clearInterval(sessionState.timerInterval);
+      if (sessionState.currentRound < config.totalRounds) {
+        setupRound(sessionState.currentRound + 1);
+      } else {
+        showFinalResults();
+      }
+    }
+
+    function showFinalResults() {
+      clearInterval(sessionState.timerInterval);
+      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('hud-center').classList.add('hidden');
+      document.getElementById('screen-results').classList.remove('hidden');
+
+      playSoundEffect('fanfare');
+      launchConfetti();
+
+      // Sort participating groups by Score DESC, then Total Time ASC
+      const rankedGroups = groupsState
+        .slice(0, config.groupCount)
+        .sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return a.totalTimeSpent - b.totalTimeSpent;
+        });
+
+      const awards = [
+        { title: "Bintang Emas Hafalan", medal: "🥇", cardBg: "from-amber-400/30 to-yellow-600/20 border-amber-400", height: "md:py-7" },
+        { title: "Bintang Perak Hafalan", medal: "🥈", cardBg: "from-slate-300/25 to-slate-500/20 border-slate-300", height: "md:py-5" },
+        { title: "Bintang Perunggu Hafalan", medal: "🥉", cardBg: "from-orange-400/25 to-amber-700/20 border-orange-400", height: "md:py-4" },
+        { title: "Bintang Semangat Murojaah", medal: "🌟", cardBg: "from-indigo-500/20 to-slate-800 border-indigo-400", height: "" },
+        { title: "Bintang Pejuang Al-Qur'an", medal: "✨", cardBg: "from-emerald-500/20 to-slate-800 border-emerald-400", height: "" }
+      ];
+
+      // Render Top 3 Podium
+      const podiumContainer = document.getElementById('podium-top-three');
+      podiumContainer.innerHTML = '';
+      // Display order on desktop: 2nd (left), 1st (center), 3rd (right)
+      const displayIndices = rankedGroups.length >= 3 ? [1, 0, 2] : rankedGroups.map((_, idx) => idx);
+
+      displayIndices.forEach(rankIdx => {
+        const g = rankedGroups[rankIdx];
+        if (!g) return;
+        const aw = awards[rankIdx] || awards[3];
+        const card = document.createElement('div');
+        card.className = `rounded-3xl border-2 bg-gradient-to-b ${aw.cardBg} p-5 ${aw.height} shadow-xl pop-in flex flex-col items-center`;
+        card.innerHTML = `
+          <div class="text-4xl sm:text-5xl mb-2">${aw.medal}</div>
+          <span class="px-3 py-0.5 rounded-full bg-slate-950/70 text-amber-300 font-extrabold text-xs mb-1">
+            Juara ${rankIdx + 1} • ${aw.title}
+          </span>
+          <h3 class="font-fredoka font-extrabold text-xl sm:text-2xl text-white">${escapeHtml(g.name)}</h3>
+          <div class="mt-3 px-5 py-1.5 rounded-2xl bg-slate-950/80 text-amber-300 font-fredoka font-extrabold text-2xl sm:text-3xl shadow">
+            ⭐ ${g.score} Poin
+          </div>
+          <div class="mt-2 text-xs font-bold text-slate-200">
+            Puzzle Selesai: ${g.puzzlesSolved} • Waktu: ${g.totalTimeSpent} dtk
+          </div>
+        `;
+        podiumContainer.appendChild(card);
+      });
+
+      // Render Full Table
+      const tbody = document.getElementById('results-table-body');
+      tbody.innerHTML = '';
+      rankedGroups.forEach((g, idx) => {
+        const aw = awards[idx] || awards[3];
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-700/40";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-fredoka text-base">${aw.medal} #${idx + 1}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full ${g.theme.badgeBg}"></span>
+              <span class="text-white">${escapeHtml(g.name)}</span>
+            </div>
+          </td>
+          <td class="py-3 px-4 text-center text-amber-300">${aw.title}</td>
+          <td class="py-3 px-4 text-center text-white">${g.puzzlesSolved}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-emerald-400">✅ ${g.correctCount}</span> / <span class="text-rose-400">❌ ${g.wrongCount}</span>
+          </td>
+          <td class="py-3 px-4 text-center text-slate-300">${g.totalTimeSpent} detik</td>
+          <td class="py-3 px-4 text-right font-fredoka text-lg text-amber-300">⭐ ${g.score}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function launchConfetti() {
+      const container = document.getElementById('confetti-container');
+      container.innerHTML = '';
+      container.classList.remove('hidden');
+      const colors = ['#facc15', '#34d399', '#38bdf8', '#f472b6', '#a78bfa', '#fb923c'];
+
+      for (let i = 0; i < 65; i++) {
+        const piece = document.createElement('div');
+        piece.style.position = 'absolute';
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.top = `-20px`;
+        piece.style.width = `${8 + Math.random() * 8}px`;
+        piece.style.height = `${8 + Math.random() * 12}px`;
+        piece.style.backgroundColor = colors[i % colors.length];
+        piece.style.borderRadius = i % 2 === 0 ? '50%' : '3px';
+        piece.style.animation = `confettiFall ${2.5 + Math.random() * 2.5}s linear ${Math.random() * 1.5}s infinite`;
+        container.appendChild(piece);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 14. UTILITY HELPERS
+     * ============================================================================
+     */
+    let toastTimeout = null;
+    function showToast(message, icon = "✨") {
+      const banner = document.getElementById('toast-banner');
+      document.getElementById('toast-text').textContent = message;
+      document.getElementById('toast-icon').textContent = icon;
+      banner.classList.remove('opacity-0', '-translate-y-4');
+      banner.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        banner.classList.add('opacity-0', '-translate-y-4');
+        banner.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Boot application on window load
+    window.onload = function () {
+      initApp();
+    };
+  </script>
+</body>
+</html>
